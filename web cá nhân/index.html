@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Nguyễn Hà Linh — Content Creator & Social Media Strategist</title>
+    <meta name="description" content="Portfolio cá nhân của Nguyễn Hà Linh — Chuyên gia sáng tạo nội dung, sản xuất video và quản lý truyền thông mạng xã hội. Sẵn sàng đồng hành cùng thương hiệu của bạn.">
+    <meta name="keywords" content="content creator, social media, video content, freelancer, marketing, sáng tạo nội dung">
+    <meta name="author" content="Nguyễn Hà Linh">
+    
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Nguyễn Hà Linh — Content Creator & Social Media Strategist">
+    <meta property="og:description" content="Biến ý tưởng thành nội dung — biến nội dung thành tăng trưởng. Xem portfolio và dịch vụ freelance của tôi.">
+    <meta property="og:image" content="images/avatar.jpg">
+    <meta property="og:url" content="https://your-domain.com">
+    
+    <!-- Favicon (thay bằng favicon thật sau) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+    
+    <!-- Google Fonts: Poppins (heading) + Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Schema Markup: Person -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Nguyễn Hà Linh",
+        "jobTitle": "Content Creator & Social Media Strategist",
+        "url": "https://your-domain.com",
+        "description": "Chuyên gia sáng tạo nội dung số, sản xuất video và quản lý truyền thông mạng xã hội.",
+        "sameAs": [
+            "https://youtube.com/@your-channel",
+            "https://tiktok.com/@your-account",
+            "https://facebook.com/your-page",
+            "https://instagram.com/your-account"
+        ],
+        "knowsAbout": ["Content Creation", "Video Production", "Social Media Management", "Content Strategy"]
+    }
+    </script>
+</head>
+<body>
+
+    <!-- ============================================
+         SECTION 1: HEADER / NAVIGATION BAR
+         ============================================ -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <!-- Logo / Tên cá nhân -->
+            <a href="#" class="logo">
+                 Hnilah<span>Hub</span>
+            </a>
+
+            <!-- Navigation Links (Desktop) -->
+            <nav class="nav-links" id="navLinks">
+                <a href="#about">Về tôi</a>
+                <a href="#portfolio">Dự án</a>
+                <a href="#services">Dịch vụ</a>
+                <a href="blog.html">Blog</a>
+                <a href="#contact">Liên hệ</a>
+                <a href="#contact" class="btn btn-cta-nav">Hợp tác ngay</a>
+            </nav>
+
+            <!-- Hamburger Menu (Mobile) -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+
+
+    <!-- ============================================
+         SECTION 2: HERO — Ấn tượng đầu tiên
+         ============================================ -->
+    <section class="hero" id="hero">
+        <div class="container hero-container">
+            <!-- Cột trái: Nội dung -->
+            <div class="hero-content">
+                <p class="hero-greeting">Xin chào! 👋 Tôi là</p>
+                <h1 class="hero-name">Nguyễn Hà Linh</h1>
+                <h2 class="hero-role">
+                    <span class="typing-text" id="typingText"></span>
+                    <span class="typing-cursor">|</span>
+                </h2>
+                <p class="hero-tagline">
+                    Biến ý tưởng thành nội dung — biến nội dung thành tăng trưởng.
+                </p>
+                <div class="hero-actions">
+                    <a href="#portfolio" class="btn btn-primary">
+                        <i class="fas fa-play-circle"></i> Xem Showreel
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <i class="fas fa-comment-dots"></i> Liên hệ ngay
+                    </a>
+                </div>
+                <!-- Social Icons -->
+                <div class="hero-socials">
+                    <a href="https://www.tiktok.com/@gockhuatlambanh" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/himtarot?locale=vi_VN" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+
+            <!-- Cột phải: Ảnh đại diện -->
+            <div class="hero-image">
+                <div class="hero-image-wrapper">
+                    <!-- Thay bằng ảnh thật của bạn -->
+                    <img src="images/avatar.jpg" 
+                         alt="Ảnh đại diện — Content Creator" 
+                         loading="eager">
+                    <!-- Vòng gradient trang trí -->
+                    <div class="hero-image-ring"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Decorative elements -->
+        <div class="hero-decoration hero-decoration--1"></div>
+        <div class="hero-decoration hero-decoration--2"></div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 3: ABOUT ME — Câu chuyện cá nhân
+         ============================================ -->
+    <section class="about" id="about">
+        <div class="container about-container">
+            <!-- Section header -->
+            <div class="section-header" data-animate>
+                <span class="section-tag">Về tôi</span>
+                <h2 class="section-title">Câu Chuyện Của Tôi</h2>
+            </div>
+
+            <div class="about-grid">
+                <!-- Cột trái: Ảnh / Video -->
+                <div class="about-media" data-animate>
+                    <div class="about-image-wrapper">
+                        <!-- Thay bằng ảnh lifestyle hoặc embed video intro -->
+                        <img src="images/about.jpg" 
+                             alt="Hình ảnh làm việc" 
+                             loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Cột phải: Nội dung giới thiệu -->
+                <div class="about-content" data-animate>
+                    <h3 class="about-heading">
+                        Từ người hướng nội ngại lên hình<br>đến <span class="text-highlight">hướng ngoại không ngần ngại thể hiện cá tính</span>
+                    </h3>
+                    <p class="about-text">
+                        Tôi là một Content Creator và Social Media Strategist với niềm đam mê biến những ý tưởng trừu tượng thành nội dung hấp dẫn, mang lại giá trị thực cho thương hiệu.
+                    </p>
+                    <p class="about-text">
+                        Với kinh nghiệm đồng hành cùng nhiều thương hiệu từ nhỏ đến lớn, tôi tin rằng nội dung hay không chỉ là sáng tạo — mà còn cần chiến lược, dữ liệu và sự thấu hiểu khán giả.
+                    </p>
+
+                    <!-- Số liệu thống kê -->
+                    <div class="about-stats">
+                        <div class="stat-item" data-animate>
+                            <span class="stat-number" data-target="5">0</span>
+                            <span class="stat-suffix">+</span>
+                            <span class="stat-label">Năm kinh nghiệm</span>
+                        </div>
+                        <div class="stat-item" data-animate>
+                            <span class="stat-number" data-target="50">0</span>
+                            <span class="stat-suffix">+</span>
+                            <span class="stat-label">Dự án hoàn thành</span>
+                        </div>
+                        <div class="stat-item" data-animate>
+                            <span class="stat-number" data-target="10">0</span>
+                            <span class="stat-suffix">M+ views</span>
+                            <span class="stat-label">Tổng lượt xem</span>
+                        </div>
+                        <div class="stat-item" data-animate>
+                            <span class="stat-number" data-target="30">0</span>
+                            <span class="stat-suffix">+</span>
+                            <span class="stat-label">Thương hiệu đồng hành</span>
+                        </div>
+                    </div>
+
+                    <!-- Kỹ năng & Công cụ -->
+                    <div class="about-skills">
+                        <h4 class="skills-title">Kỹ năng & Công cụ</h4>
+                        <div class="skills-tags">
+                            <span class="skill-tag"><i class="fas fa-video"></i> Premiere Pro</span>
+                            <span class="skill-tag"><i class="fas fa-cut"></i> CapCut</span>
+                            <span class="skill-tag"><i class="fas fa-palette"></i> Canva</span>
+                            <span class="skill-tag"><i class="fas fa-camera"></i> Lightroom</span>
+                            <span class="skill-tag"><i class="fab fa-figma"></i> Figma</span>
+                            <span class="skill-tag"><i class="fas fa-chart-line"></i> Meta Business Suite</span>
+                            <span class="skill-tag"><i class="fas fa-hashtag"></i> Social Media</span>
+                            <span class="skill-tag"><i class="fas fa-pen-nib"></i> Copywriting</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 4: PORTFOLIO — Dự án tiêu biểu
+         ============================================ -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <!-- Section header -->
+            <div class="section-header text-center" data-animate>
+                <span class="section-tag">Portfolio</span>
+                <h2 class="section-title">Dự Án Tiêu Biểu</h2>
+                <p class="section-desc">Kết quả nói lên năng lực. Đây là những câu chuyện thành công.</p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="portfolio-filters" data-animate>
+                <button class="filter-btn active" data-filter="all">Tất cả</button>
+                <button class="filter-btn" data-filter="video">Video Content</button>
+                <button class="filter-btn" data-filter="social">Social Media</button>
+            </div>
+
+            <!-- Portfolio Grid -->
+            <div class="portfolio-grid">
+                <!-- Dữ liệu được tải động từ Supabase -->
+                <div id="portfolio-loading" style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-secondary)">
+                    <i class="fas fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;"></i>
+                    <p>Đang tải dự án...</p>
+                </div>
+            </div><!-- /.portfolio-grid -->
+        </div>
+
+        <!-- Container modal portfolio — được render động bởi JS -->
+        <div id="portfolio-modals-container"></div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 5: DỊCH VỤ FREELANCE
+         ============================================ -->
+    <section class="services" id="services">
+        <div class="container">
+            <!-- Section header -->
+            <div class="section-header text-center" data-animate>
+                <span class="section-tag">Dịch vụ</span>
+                <h2 class="section-title">Tôi Có Thể Giúp Gì Cho Bạn?</h2>
+                <p class="section-desc">Các dịch vụ được thiết kế riêng để giải quyết đúng nhu cầu nội dung của thương hiệu bạn.</p>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="services-grid">
+                <!-- Dữ liệu được tải động từ Supabase -->
+                <div id="services-loading" style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-secondary)">
+                    <i class="fas fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;"></i>
+                    <p>Đang tải dịch vụ...</p>
+                </div>
+            </div><!-- /.services-grid -->
+
+            <!-- Quy trình làm việc -->
+            <div class="workflow" data-animate>
+                <h3 class="workflow-title">Quy Trình Làm Việc</h3>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-number">01</div>
+                        <div class="step-icon"><i class="fas fa-comments"></i></div>
+                        <h4>Trao đổi</h4>
+                        <p>Lắng nghe nhu cầu, mục tiêu và thách thức của bạn</p>
+                    </div>
+                    <div class="workflow-connector"><i class="fas fa-chevron-right"></i></div>
+                    <div class="workflow-step">
+                        <div class="step-number">02</div>
+                        <div class="step-icon"><i class="fas fa-map"></i></div>
+                        <h4>Lên kế hoạch</h4>
+                        <p>Đề xuất giải pháp, timeline và deliverables rõ ràng</p>
+                    </div>
+                    <div class="workflow-connector"><i class="fas fa-chevron-right"></i></div>
+                    <div class="workflow-step">
+                        <div class="step-number">03</div>
+                        <div class="step-icon"><i class="fas fa-rocket"></i></div>
+                        <h4>Thực thi</h4>
+                        <p>Triển khai sáng tạo, cập nhật tiến độ liên tục</p>
+                    </div>
+                    <div class="workflow-connector"><i class="fas fa-chevron-right"></i></div>
+                    <div class="workflow-step">
+                        <div class="step-number">04</div>
+                        <div class="step-icon"><i class="fas fa-chart-pie"></i></div>
+                        <h4>Báo cáo</h4>
+                        <p>Đo lường kết quả, đánh giá và tối ưu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 6: LIÊN HỆ
+         ============================================ -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <!-- Section header -->
+            <div class="section-header text-center" data-animate>
+                <span class="section-tag">Liên hệ</span>
+                <h2 class="section-title">Sẵn Sàng Hợp Tác?</h2>
+                <p class="section-desc">Hãy bắt đầu từ một cuộc trò chuyện. Mình luôn sẵn sàng lắng nghe ý tưởng của bạn.</p>
+            </div>
+
+            <div class="contact-grid">
+                <!-- Cột trái: Thông tin liên hệ -->
+                <div class="contact-info" data-animate>
+                    <h3 class="contact-heading">Kết nối với tôi</h3>
+                    <p class="contact-text">
+                        Dù bạn cần một video viral, một chiến lược nội dung bài bản, hay đơn giản chỉ muốn trao đổi ý tưởng — hãy nhắn cho tôi!
+                    </p>
+
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <div>
+                                <span class="contact-label">Email</span>
+                                <a href="mailto:ng.halinh2003@gmail.com">ng.halinh2003@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                            <div>
+                                <span class="contact-label">Điện thoại</span>
+                                <a href="tel:0943395623">0943 395 623</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <span class="contact-label">Địa điểm</span>
+                                <span>Hà Nội, Việt Nam</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="contact-socials">
+                        <a href="https://www.tiktok.com/@gockhuatlambanh" target="_blank" aria-label="TikTok" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.facebook.com/himtarot?locale=vi_VN" target="_blank" aria-label="Facebook" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+
+                    <!-- CTA phụ -->
+                    <div class="contact-alt">
+                        <p>Hoặc nhắn nhanh qua:</p>
+                        <div class="contact-alt-links">
+                            <a href="https://www.facebook.com/himtarot?locale=vi_VN" class="btn btn-messenger"><i class="fab fa-facebook-messenger"></i> Messenger</a>
+                            <a href="https://zalo.me/0943395623" class="btn btn-zalo">Zalo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột phải: Form liên hệ -->
+                <div class="contact-form-wrapper" data-animate>
+                    <form class="contact-form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                        <div class="form-group">
+                            <label for="contact-name">Tên của bạn <span class="required">*</span></label>
+                            <input type="text" id="contact-name" name="name" placeholder="Ví dụ: Nguyễn Văn A" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email <span class="required">*</span></label>
+                            <input type="email" id="contact-email" name="email" placeholder="email@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-service">Dịch vụ quan tâm</label>
+                            <select id="contact-service" name="service">
+                                <option value="" disabled selected>— Chọn dịch vụ —</option>
+                                <option value="video-content">Sản xuất Video Content</option>
+                                <option value="social-media">Quản lý Social Media</option>
+                                <option value="other">Khác / Trao đổi chung</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Nội dung <span class="required">*</span></label>
+                            <textarea id="contact-message" name="message" rows="5" placeholder="Chia sẻ về dự án hoặc ý tưởng bạn muốn thực hiện..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <i class="fas fa-paper-plane"></i> Gửi Yêu Cầu
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================================
+         SECTION 7: FOOTER
+         ============================================ -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <!-- Logo & Tagline -->
+            <div class="footer-brand">
+                <a href="#" class="logo"> Hnilah<span>Hub</span></a>
+                <p class="footer-tagline">Biến ý tưởng thành nội dung — biến nội dung thành tăng trưởng.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-links">
+                <h4>Liên kết</h4>
+                <nav>
+                    <a href="#about">Về tôi</a>
+                    <a href="#portfolio">Dự án</a>
+                    <a href="#services">Dịch vụ</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="#contact">Liên hệ</a>
+                </nav>
+            </div>
+
+            <!-- Social -->
+            <div class="footer-social">
+                <h4>Kết nối</h4>
+                <div class="footer-social-icons">
+                    <a href="https://www.tiktok.com/@gockhuatlambanh" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/himtarot?locale=vi_VN" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 HnilahHub. Thiết kế với <i class="fas fa-heart" style="color: #FF6B81;"></i> bởi Nguyễn Hà Linh.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+         BACK TO TOP BUTTON
+         ============================================ -->
+    <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Cấu hình Supabase -->
+    <script src="js/supabase-config.js"></script>
+    <!-- Script chính -->
+    <script src="js/script.js"></script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — HnilahHub</title>
+    <meta name="description" content="Khám phá các bài viết, chia sẻ kinh nghiệm về content creation, marketing và social media.">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Blog — HnilahHub">
+    <meta property="og:description" content="Khám phá các bài viết, chia sẻ kinh nghiệm về content creation, marketing và social media.">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+<body>
+
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"> Hnilah<span>Hub</span></a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html#about">Về tôi</a>
+                <a href="index.html#portfolio">Dự án</a>
+                <a href="index.html#services">Dịch vụ</a>
+                <a href="blog.html" style="color: var(--clr-primary); font-weight: 700;">Blog</a>
+                <a href="index.html#contact">Liên hệ</a>
+                <a href="index.html#contact" class="btn btn-cta-nav">Hợp tác ngay</a>
+            </nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+
+    <section class="blog-hero">
+        <div class="container">
+            <h1 class="section-title">Blog & Chia sẻ</h1>
+            <p class="section-desc">Góc nhỏ lưu giữ những câu chuyện, kinh nghiệm về sáng tạo nội dung, làm thương hiệu và hành trình làm nghề.</p>
+        </div>
+    </section>
+
+    <section class="blog-main">
+        <div class="container">
+            <div class="blog-filter-bar">
+                <div class="blog-categories" id="categoryFilters">
+                    <!-- Load bằng JS -->
+                </div>
+                <div class="blog-search">
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm bài viết...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <div id="blogLoading" style="text-align:center; padding: 40px; color: var(--clr-text-secondary); display: none;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                <p>Đang tải bài viết...</p>
+            </div>
+
+            <div class="blog-grid" id="blogGrid">
+                <!-- Load bằng JS -->
+            </div>
+
+            <div class="pagination" id="paginationContainer">
+                <!-- Load bằng JS -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="logo"> Hnilah<span>Hub</span></a>
+                <p class="footer-tagline">Biến ý tưởng thành nội dung — biến nội dung thành tăng trưởng.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết</h4>
+                <nav>
+                    <a href="index.html#about">Về tôi</a>
+                    <a href="index.html#portfolio">Dự án</a>
+                    <a href="index.html#services">Dịch vụ</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="index.html#contact">Liên hệ</a>
+                </nav>
+            </div>
+            <div class="footer-social">
+                <h4>Kết nối</h4>
+                <div class="footer-social-icons">
+                    <a href="https://www.tiktok.com/@gockhuatlambanh" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/himtarot?locale=vi_VN" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 HnilahHub. Thiết kế với <i class="fas fa-heart" style="color: #FF6B81;"></i> bởi Nguyễn Hà Linh.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/blog.js"></script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soạn thảo Bài viết - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Quill.js CDN -->
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/editor.css">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/supabase-config.js"></script>
+</head>
+<body class="editor-body">
+    
+    <!-- Loading overlay -->
+    <div id="editor-loading" class="editor-loading" style="display:none;">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+        <p style="margin-top: 1rem;">Đang tải dữ liệu...</p>
+    </div>
+
+    <!-- Top bar -->
+    <header class="editor-topbar">
+        <div class="topbar-left">
+            <a href="dashboard.html" class="btn-back" title="Quay lại Dashboard"><i class="fas fa-arrow-left"></i></a>
+            <h2>Soạn thảo bài viết</h2>
+        </div>
+        <div class="topbar-right">
+            <button class="btn btn-outline" onclick="savePost('draft')"><i class="fas fa-file-alt"></i> Lưu nháp</button>
+            <button class="btn btn-primary" id="btn-save" onclick="savePost()"><i class="fas fa-save"></i> Lưu bài</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="editor-main">
+        <!-- Cột trái: Nội dung -->
+        <div class="editor-content-col">
+            <input type="text" id="post-title" class="title-input" placeholder="Nhập tiêu đề bài viết..." autocomplete="off">
+            <div class="quill-container">
+                <div id="editor-container"></div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Cài đặt -->
+        <div class="editor-sidebar-col">
+            <div class="panel-section">
+                <h3 class="panel-title">Trạng thái & Danh mục</h3>
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <select id="post-status">
+                        <option value="draft">Bản nháp</option>
+                        <option value="published">Đã xuất bản</option>
+                        <option value="archived">Lưu trữ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Danh mục</label>
+                    <select id="post-category">
+                        <option value="">Đang tải...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3 class="panel-title">Ảnh đại diện</h3>
+                <div class="form-group">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="featured-image" placeholder="URL ảnh..." style="flex:1;">
+                        <button type="button" class="btn btn-outline" onclick="selectFeaturedImage()">Chọn</button>
+                    </div>
+                    <div id="featured-preview" class="image-preview"></div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3 class="panel-title">Tóm tắt (Excerpt)</h3>
+                <div class="form-group">
+                    <textarea id="post-excerpt" rows="3" placeholder="Đoạn mô tả ngắn hiển thị ở trang danh sách bài viết..."></textarea>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3 class="panel-title">SEO & Mạng xã hội</h3>
+                <div class="form-group">
+                    <label>Slug (Đường dẫn)</label>
+                    <input type="text" id="post-slug" placeholder="duong-dan-bai-viet">
+                </div>
+                <div class="form-group">
+                    <label>Meta Title <span id="meta-title-counter" class="counter">0/60</span></label>
+                    <input type="text" id="meta-title" placeholder="Tiêu đề SEO">
+                </div>
+                <div class="form-group">
+                    <label>Meta Description <span id="meta-desc-counter" class="counter">0/160</span></label>
+                    <textarea id="meta-desc" rows="3" placeholder="Mô tả cho Google Search..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Từ khóa (Keywords)</label>
+                    <input type="text" id="meta-keywords" placeholder="Cách nhau bằng dấu phẩy">
+                </div>
+                <div class="form-group">
+                    <label>OG Image (Ảnh share Facebook)</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="og-image" placeholder="URL ảnh OG..." style="flex:1;">
+                        <button type="button" class="btn btn-outline" onclick="selectOgImage()">Chọn</button>
+                    </div>
+                    <div id="og-preview-img" class="image-preview"></div>
+                </div>
+                
+                <!-- Điểm SEO -->
+                <div id="seo-panel" style="margin-top: 1rem;"></div>
+                <div id="og-preview"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer bar -->
+    <footer class="editor-footer">
+        <div id="save-status" class="status-info">
+            <i class="fas fa-check-circle"></i> Sẵn sàng
+        </div>
+        <div class="stats-info">
+            Số từ: <span id="word-count">0</span> | Thời gian đọc: ~<span id="read-time">0</span> phút
+        </div>
+    </footer>
+
+    <!-- Media Picker Modal -->
+    <div class="modal-overlay" id="media-modal">
+        <div class="modal-container" style="max-width: 800px; height: 80vh;">
+            <div class="modal-header">
+                <h3>Thư viện Media</h3>
+                <button class="modal-close" onclick="closeModal('media-modal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding:0; display:flex; flex-direction:column;">
+                <div class="tabs" style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display:flex; gap:1rem;">
+                    <button class="btn btn-outline" id="tab-library-btn" onclick="document.getElementById('media-upload-zone').style.display='none'; document.getElementById('media-library-zone').style.display='block';">Thư viện</button>
+                    <button class="btn btn-primary" onclick="document.getElementById('media-library-zone').style.display='none'; document.getElementById('media-upload-zone').style.display='block';">Tải lên mới</button>
+                </div>
+                
+                <!-- Upload Zone -->
+                <div id="media-upload-zone" style="display:none; padding: 2rem;">
+                    <div id="drop-zone" class="upload-dropzone">
+                        <i class="fas fa-cloud-upload-alt fa-3x" style="color:var(--text-muted); margin-bottom:1rem;"></i>
+                        <p>Kéo thả ảnh vào đây hoặc click để chọn file</p>
+                        <p style="font-size: 0.8rem; color:var(--text-muted); margin-top:0.5rem;">Hỗ trợ: JPG, PNG, WEBP. Tối đa: 5MB</p>
+                        <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp, image/gif" style="display:none;">
+                    </div>
+                    <div style="margin-top:1rem; height:4px; background:var(--bg-main); border-radius:2px; overflow:hidden;">
+                        <div id="upload-progress" style="height:100%; width:0%; background:var(--success); transition:width 0.3s;"></div>
+                    </div>
+                    <div id="upload-preview" style="margin-top:1rem; text-align:center;"></div>
+                </div>
+
+                <!-- Library Zone -->
+                <div id="media-library-zone" style="flex:1; overflow-y:auto; padding: 1.5rem;">
+                    <div id="media-grid" class="media-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/media.js"></script>
+    <script src="js/seo.js"></script>
+    <script src="js/posts.js"></script>
+    <script>
+        // Check Auth and URL Tokens
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('access_token');
+        const refreshToken = urlParams.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+            // Set session từ URL (được truyền từ dashboard qua)
+            supabaseClient.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken
+            }).then(() => {
+                // Xóa token khỏi URL để bảo mật
+                const newUrl = window.location.pathname + (urlParams.get('id') ? '?id=' + urlParams.get('id') : '');
+                window.history.replaceState({}, document.title, newUrl);
+                
+                initEditor();
+                initMediaUploadZone(
+                    document.getElementById('drop-zone'),
+                    document.getElementById('file-input'),
+                    document.getElementById('upload-preview'),
+                    document.getElementById('upload-progress')
+                );
+            });
+        } else {
+            // Fallback: check session bình thường
+            supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                if (!session) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    initEditor();
+                    initMediaUploadZone(
+                        document.getElementById('drop-zone'),
+                        document.getElementById('file-input'),
+                        document.getElementById('upload-preview'),
+                        document.getElementById('upload-progress')
+                    );
+                }
+            });
+        }
+    </script>
+</body>
+</html>

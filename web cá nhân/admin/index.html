@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - HnilahHub Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/supabase-config.js"></script>
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-header">
+            <h2>Hnilah<span>Hub</span> Admin</h2>
+            <p>Đăng nhập để quản lý nội dung</p>
+        </div>
+        
+        <form id="loginForm" class="login-form">
+            <div id="loginError" class="alert alert-danger" style="display: none;"></div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="admin@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Đăng nhập</button>
+            <a href="../index.html" class="back-link">← Quay lại trang web</a>
+        </form>
+    </div>
+
+    <script>
+        // Chuyển hướng nếu đã đăng nhập
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                document.getElementById('loginForm').innerHTML = '<div style="text-align:center"><h3 style="color:var(--success);margin-bottom:1rem">Đã đăng nhập thành công!</h3><a href="dashboard.html" class="btn btn-primary btn-block">Vào Bảng Điều Khiển</a></div>';
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const errDiv = document.getElementById('loginError');
+            
+            btn.innerHTML = 'Đang xử lý...';
+            btn.disabled = true;
+            errDiv.style.display = 'none';
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                errDiv.textContent = 'Email hoặc mật khẩu không đúng!';
+                errDiv.style.display = 'block';
+                btn.innerHTML = 'Đăng nhập';
+                btn.disabled = false;
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>
