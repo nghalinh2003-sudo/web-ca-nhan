@@ -5,8 +5,8 @@
 //     của bạn sau khi tạo project trên supabase.com
 // ============================================================
 
-const SUPABASE_URL  = 'https://YOUR_PROJECT_ID.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+const SUPABASE_URL  = 'https://ppsrjmrzwuztjlvrwwty.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwc3JqbXJ6d3V6dGpsdnJ3d3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjA4MTMsImV4cCI6MjEwMjY5NjgxM30.buvXYk0qnFnuVtnO71A38CkW_KUEN0Bp0e7IE4orTHM';
 
 // Khởi tạo Supabase client — dùng chung cho toàn bộ website
 const { createClient } = supabase;

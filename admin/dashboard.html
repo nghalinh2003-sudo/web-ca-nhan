@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - HnilahHub Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/supabase-config.js"></script>
+</head>
+<body>
+    <!-- MÀN HÌNH ĐĂNG NHẬP (Chỉ hiện khi chưa đăng nhập) -->
+    <div id="login-screen" style="display: none; height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--admin-bg);">
+        <div style="width: 100%; max-width: 400px; padding: 2.5rem; background: var(--admin-card); border-radius: 12px; border: 1px solid var(--admin-border); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 style="color: var(--admin-text); font-size: 1.8rem; margin-bottom: 0.5rem;">Hnilah<span style="color: var(--admin-accent);">Hub</span></h2>
+                <p style="color: var(--admin-text-secondary); font-size: 0.9rem;">Đăng nhập để quản lý nội dung</p>
+            </div>
+            <form id="loginForm">
+                <div id="loginError" style="display: none; background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; text-align: center;"></div>
+                <div style="margin-bottom: 1.2rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--admin-text-secondary); font-size: 0.9rem;">Email</label>
+                    <input type="email" id="login-email" required placeholder="admin@example.com" style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; background: var(--admin-bg); border: 1px solid var(--admin-border); color: var(--admin-text); outline: none;">
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--admin-text-secondary); font-size: 0.9rem;">Mật khẩu</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; background: var(--admin-bg); border: 1px solid var(--admin-border); color: var(--admin-text); outline: none;">
+                </div>
+                <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1rem; justify-content: center;">Đăng nhập</button>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="../index.html" style="color: var(--admin-text-secondary); text-decoration: none; font-size: 0.9rem;">← Quay lại trang web</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- GIAO DIỆN QUẢN TRỊ (Chỉ hiện khi đã đăng nhập) -->
+    <div id="dashboard-screen" class="admin-layout" style="display: none;">
+        <aside class="admin-sidebar">
+            <div class="sidebar-logo">
+                Hnilah<span>Hub</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active nav-item" data-target="tab-dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Tổng quan
+                </a>
+                <a href="#" class="sidebar-link nav-item" data-target="tab-posts">
+                    <i class="fas fa-newspaper"></i> Bài viết
+                </a>
+                <a href="#" class="sidebar-link nav-item" data-target="tab-categories">
+                    <i class="fas fa-folder"></i> Danh mục
+                </a>
+                <a href="#" class="sidebar-link nav-item" data-target="tab-media">
+                    <i class="fas fa-images"></i> Thư viện Media
+                </a>
+                <a class="nav-item" data-target="tab-contacts">
+                    <i class="fas fa-envelope"></i> Tin nhắn
+                </a>
+                <a class="nav-item" data-target="tab-portfolio">
+                    <i class="fas fa-briefcase"></i> Portfolio
+                </a>
+                <a class="nav-item" data-target="tab-services">
+                    <i class="fas fa-star"></i> Dịch vụ
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-outline btn-block" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </div>
+        </aside>
+
+        <!-- Content -->
+        <main class="admin-content">
+            <header class="admin-header">
+                <h2 id="page-title">Tổng quan</h2>
+                <a href="../index.html" target="_blank" class="btn btn-outline">Xem Website</a>
+            </header>
+
+            <!-- TAB: DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content active">
+                <!-- 4 thẻ KPI -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number stat-value" id="stat-posts">0</span>
+                            <span class="stat-label">Bài viết</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number stat-value" id="stat-views">0</span>
+                            <span class="stat-label">Tổng lượt xem</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number stat-value" id="stat-new-contacts">0</span>
+                            <span class="stat-label">Tin nhắn mới</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-briefcase"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-number stat-value" id="stat-portfolio">0</span>
+                            <span class="stat-label">Dự án</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2 cột: Bài viết gần đây + Tin nhắn gần đây -->
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>📝 Bài viết gần đây</h3>
+                            <a href="#" onclick="document.querySelector('.nav-item[data-target=\'tab-posts\']').click(); return false;">Xem tất cả →</a>
+                        </div>
+                        <div id="recent-posts">Đang tải...</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>💬 Tin nhắn gần đây</h3>
+                            <a href="#" onclick="document.querySelector('.nav-item[data-target=\'tab-contacts\']').click(); return false;">Xem tất cả →</a>
+                        </div>
+                        <div id="recent-contacts">Đang tải...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: POSTS -->
+            <div id="tab-posts" class="tab-content">
+                <div class="tab-header">
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-icon"><i class="fas fa-newspaper"></i></div><div class="stat-info"><span class="stat-number stat-value" id="posts-total">0</span><span class="stat-label">Tổng bài viết</span></div></div>
+                        <div class="stat-card"><div class="stat-icon" style="color:var(--success)"><i class="fas fa-check-circle"></i></div><div class="stat-info"><span class="stat-number stat-value" id="posts-published">0</span><span class="stat-label">Đã xuất bản</span></div></div>
+                        <div class="stat-card"><div class="stat-icon" style="color:var(--warning)"><i class="fas fa-edit"></i></div><div class="stat-info"><span class="stat-number stat-value" id="posts-draft">0</span><span class="stat-label">Bản nháp</span></div></div>
+                    </div>
+                </div>
+                <div class="table-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all" onclick="filterPosts('all')">Tất cả</button>
+                        <button class="filter-btn" data-filter="published" onclick="filterPosts('published')">Đã xuất bản</button>
+                        <button class="filter-btn" data-filter="draft" onclick="filterPosts('draft')">Bản nháp</button>
+                    </div>
+                    <div class="table-actions">
+                        <input type="text" id="posts-search" placeholder="Tìm kiếm bài viết..." class="search-input" onkeyup="searchPosts(this.value)">
+                        <a href="#" onclick="openEditor(); return false;" class="btn btn-primary"><i class="fas fa-plus"></i> Viết bài mới</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead><tr><th>Tiêu đề</th><th>Danh mục</th><th>Trạng thái</th><th>Lượt xem</th><th>Ngày</th><th>Hành động</th></tr></thead>
+                        <tbody id="posts-tbody"></tbody>
+                    </table>
+                </div>
+                <div id="posts-pagination" class="pagination"></div>
+            </div>
+
+            <!-- TAB: CATEGORIES -->
+            <div id="tab-categories" class="tab-content">
+                <div class="table-controls">
+                    <h3>Quản lý danh mục</h3>
+                    <button class="btn btn-primary" onclick="openCategoryModal()"><i class="fas fa-plus"></i> Thêm danh mục</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead><tr><th>Tên</th><th>Slug</th><th>Mô tả</th><th>Số bài</th><th>Hành động</th></tr></thead>
+                        <tbody id="categories-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: MEDIA -->
+            <div id="tab-media" class="tab-content">
+                <div class="table-controls">
+                    <h3>Thư viện Media</h3>
+                    <button class="btn btn-primary" onclick="document.getElementById('media-file-input').click()"><i class="fas fa-upload"></i> Upload ảnh</button>
+                    <input type="file" id="media-file-input" accept="image/*" multiple style="display:none" onchange="handleMediaUpload(this.files)">
+                </div>
+                <!-- Drag & drop zone -->
+                <div id="media-dropzone" class="media-dropzone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Kéo thả ảnh vào đây hoặc nhấn nút Upload</p>
+                </div>
+                <div id="media-grid" class="media-grid"></div>
+                <div id="media-pagination" class="pagination"></div>
+            </div>
+
+            <!-- TAB: CONTACTS -->
+            <section id="tab-contacts" class="tab-content">
+                <div class="stats-grid" id="contacts-stats">
+                    <!-- Stats render here -->
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Danh sách tin nhắn</h3>
+                        <div>
+                            <select id="contact-filter" class="form-group" style="margin:0; padding:0.5rem; width:auto; display:inline-block;" onchange="loadContacts()">
+                                <option value="all">Tất cả</option>
+                                <option value="new">Mới chưa đọc</option>
+                                <option value="done">Đã xử lý</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Dịch vụ quan tâm</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contacts-tbody">
+                                <!-- Data render here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: PORTFOLIO -->
+            <section id="tab-portfolio" class="tab-content">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Danh sách dự án</h3>
+                        <button class="btn btn-primary" onclick="openPortfolioModal()">
+                            <i class="fas fa-plus"></i> Thêm dự án
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Thứ tự</th>
+                                    <th>Dự án</th>
+                                    <th>Danh mục</th>
+                                    <th>Hiển thị</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="portfolio-tbody">
+                                <!-- Data render here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: SERVICES -->
+            <section id="tab-services" class="tab-content">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Dịch vụ cung cấp</h3>
+                        <button class="btn btn-primary" onclick="openServiceModal()">
+                            <i class="fas fa-plus"></i> Thêm dịch vụ
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Thứ tự</th>
+                                    <th>Dịch vụ</th>
+                                    <th>Hiển thị</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="services-tbody">
+                                <!-- Data render here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="category-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="category-modal-title">Thêm danh mục</h3>
+                <button class="modal-close" onclick="closeModal('category-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveCategory(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="cat_id">
+                    <div class="form-group">
+                        <label>Tên danh mục *</label>
+                        <input type="text" id="cat_name" required placeholder="Ví dụ: Content Marketing">
+                    </div>
+                    <div class="form-group">
+                        <label>Slug (tự sinh nếu để trống)</label>
+                        <input type="text" id="cat_slug" placeholder="content-marketing">
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả</label>
+                        <textarea id="cat_description" rows="3" placeholder="Mô tả ngắn về danh mục"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Thứ tự hiển thị</label>
+                        <input type="number" id="cat_order" value="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('category-modal')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Media Picker Modal -->
+    <div class="modal-overlay" id="media-picker-modal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header">
+                <h3>Chọn ảnh</h3>
+                <button class="modal-close" onclick="closeModal('media-picker-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="media-picker-tabs">
+                    <button class="picker-tab active" onclick="switchPickerTab('library')">Thư viện</button>
+                    <button class="picker-tab" onclick="switchPickerTab('upload')">Upload mới</button>
+                </div>
+                <div id="picker-library" class="picker-content active">
+                    <div id="picker-media-grid" class="media-grid"></div>
+                </div>
+                <div id="picker-upload" class="picker-content">
+                    <div class="upload-zone" id="picker-dropzone" onclick="document.getElementById('picker-file-input').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Kéo thả ảnh hoặc nhấn để chọn file</p>
+                        <input type="file" id="picker-file-input" accept="image/*" onchange="handlePickerUpload(this.files[0])">
+                    </div>
+                    <div id="picker-preview"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('media-picker-modal')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact View Modal -->
+    <div class="modal-overlay" id="contact-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Chi tiết tin nhắn</h3>
+                <button class="modal-close" onclick="closeModal('contact-modal')">&times;</button>
+            </div>
+            <div class="modal-body" id="contact-detail-content">
+                <!-- Data -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('contact-modal')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Form Modal -->
+    <div class="modal-overlay" id="portfolio-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="portfolio-modal-title">Thêm dự án</h3>
+                <button class="modal-close" onclick="closeModal('portfolio-modal')">&times;</button>
+            </div>
+            <form id="portfolio-form" onsubmit="savePortfolio(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="pf_id">
+                    <div class="form-group">
+                        <label>Tiêu đề *</label>
+                        <input type="text" id="pf_title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Danh mục *</label>
+                        <select id="pf_category" required>
+                            <option value="video">Video Content</option>
+                            <option value="social">Social Media</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ảnh đại diện</label>
+                        <div class="image-picker">
+                            <img id="pf_image_preview" src="" alt="Preview" style="display:none; max-width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="hidden" id="pf_image">
+                            <button type="button" class="btn btn-outline" onclick="openMediaPicker(url => { document.getElementById('pf_image').value = url; document.getElementById('pf_image_preview').src = url; document.getElementById('pf_image_preview').style.display = 'block'; })">
+                                <i class="fas fa-images"></i> Chọn ảnh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả ngắn</label>
+                        <textarea id="pf_desc" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Vấn đề (hiện trong chi tiết)</label>
+                        <textarea id="pf_problem" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Giải pháp (hiện trong chi tiết)</label>
+                        <textarea id="pf_solution" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Kết quả (mỗi dòng 1 ý)</label>
+                        <textarea id="pf_results" rows="3" placeholder="1.2M lượt xem&#10;Tăng 500% follower"></textarea>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <div class="form-group" style="flex:1">
+                            <label>Thứ tự sắp xếp</label>
+                            <input type="number" id="pf_order" value="0">
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label>Trạng thái</label>
+                            <select id="pf_visible">
+                                <option value="true">Hiển thị</option>
+                                <option value="false">Ẩn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('portfolio-modal')">Hủy</button>
+                    <button type="submit" class="btn btn-primary" id="pf_submit">Lưu lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Service Form Modal -->
+    <div class="modal-overlay" id="service-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="service-modal-title">Thêm dịch vụ</h3>
+                <button class="modal-close" onclick="closeModal('service-modal')">&times;</button>
+            </div>
+            <form id="service-form" onsubmit="saveService(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="sv_id">
+                    <div class="form-group">
+                        <label>Tiêu đề *</label>
+                        <input type="text" id="sv_title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon (Class FontAwesome)</label>
+                        <input type="text" id="sv_icon" placeholder="fas fa-video">
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả ngắn</label>
+                        <textarea id="sv_desc" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tính năng (mỗi dòng 1 ý)</label>
+                        <textarea id="sv_features" rows="4"></textarea>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <div class="form-group" style="flex:1">
+                            <label>Thứ tự sắp xếp</label>
+                            <input type="number" id="sv_order" value="0">
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label>Trạng thái</label>
+                            <select id="sv_visible">
+                                <option value="true">Hiển thị</option>
+                                <option value="false">Ẩn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('service-modal')">Hủy</button>
+                    <button type="submit" class="btn btn-primary" id="sv_submit">Lưu lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    </div> <!-- End Dashboard Screen -->
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="js/admin.js"></script>
+    <script src="js/media.js"></script>
+    <script src="js/posts.js"></script>
+</body>
+</html>

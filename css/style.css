@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
 
 /* ==========================================================================
    BIẾN CSS TÙY CHỈNH (VARIABLES)
@@ -28,7 +28,7 @@
   --shadow-nav: 0 4px 12px rgba(0, 0, 0, 0.05);
   
   /* Phông chữ */
-  --font-heading: 'Poppins', sans-serif;
+  --font-heading: 'Be Vietnam Pro', sans-serif;
   --font-body: 'Inter', sans-serif;
   
   /* Chuyển động */
@@ -1651,4 +1651,5 @@ h1, h2, h3, h4, h5, h6 {
     padding: 24px;
   }
 }
+
 

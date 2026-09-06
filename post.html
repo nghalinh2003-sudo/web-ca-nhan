@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đang tải bài viết... - HnilahHub</title>
+    <meta name="description" content="">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Đang tải bài viết...">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+<body>
+
+    <header class="navbar navbar--scrolled" id="navbar" style="background: white;">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"> Hnilah<span>Hub</span></a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html#about">Về tôi</a>
+                <a href="index.html#portfolio">Dự án</a>
+                <a href="index.html#services">Dịch vụ</a>
+                <a href="blog.html" style="color: var(--clr-primary); font-weight: 700;">Blog</a>
+                <a href="index.html#contact">Liên hệ</a>
+                <a href="index.html#contact" class="btn btn-cta-nav">Hợp tác ngay</a>
+            </nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+
+    <section class="article-page">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Trang chủ</a>
+                <span class="separator"><i class="fas fa-chevron-right"></i></span>
+                <a href="blog.html">Blog</a>
+                <span class="separator"><i class="fas fa-chevron-right"></i></span>
+                <a href="#" id="bcCategory">Danh mục</a>
+                <span class="separator"><i class="fas fa-chevron-right"></i></span>
+                <span id="bcTitle" style="color: var(--clr-text-primary);">...</span>
+            </div>
+
+            <div class="article-header">
+                <span class="article-category" id="postCategory">...</span>
+                <h1 class="article-title" id="postTitle">...</h1>
+                <div class="article-meta">
+                    <span><i class="far fa-calendar-alt"></i> <span id="postDate">...</span></span>
+                    <span><i class="far fa-clock"></i> <span id="postReadTime">0</span> phút đọc</span>
+                </div>
+            </div>
+
+            <div class="article-featured-image">
+                <img id="postImage" src="" alt="">
+            </div>
+
+            <article class="article-content" id="postContent">
+                <!-- Nội dung HTML từ Quill -->
+                <div style="text-align:center; padding: 40px; color: var(--clr-text-secondary);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i>
+                </div>
+            </article>
+
+            <div class="article-footer">
+                <div>
+                    <h4 style="margin-bottom: 10px; font-size: 0.9rem;">Thẻ:</h4>
+                    <div class="article-tags" id="postTags">
+                        <!-- Tags load bằng JS -->
+                    </div>
+                </div>
+                
+                <div class="article-share">
+                    <span>Chia sẻ:</span>
+                    <button class="share-btn" onclick="sharePost('facebook')" title="Chia sẻ Facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button class="share-btn" onclick="sharePost('twitter')" title="Chia sẻ Twitter"><i class="fab fa-twitter"></i></button>
+                    <button class="share-btn" onclick="sharePost('copy')" title="Copy Link"><i class="fas fa-link"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="related-posts" id="relatedPostsSection">
+        <div class="container">
+            <h2 class="section-title text-center" style="font-size: 2rem; margin-bottom: 40px;">Bài viết liên quan</h2>
+            <div class="blog-grid" id="relatedPostsGrid">
+                <!-- Related posts load bằng JS -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="logo"> Hnilah<span>Hub</span></a>
+                <p class="footer-tagline">Biến ý tưởng thành nội dung — biến nội dung thành tăng trưởng.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết</h4>
+                <nav>
+                    <a href="index.html#about">Về tôi</a>
+                    <a href="index.html#portfolio">Dự án</a>
+                    <a href="index.html#services">Dịch vụ</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="index.html#contact">Liên hệ</a>
+                </nav>
+            </div>
+            <div class="footer-social">
+                <h4>Kết nối</h4>
+                <div class="footer-social-icons">
+                    <a href="https://www.tiktok.com/@gockhuatlambanh" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/himtarot?locale=vi_VN" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 HnilahHub. Thiết kế với <i class="fas fa-heart" style="color: #FF6B81;"></i> bởi Nguyễn Hà Linh.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/blog.js"></script>
+</body>
+</html>
