@@ -296,6 +296,53 @@ function setMetaTags(post) {
     
     let ogImage = document.querySelector('meta[property="og:image"]');
     if (ogImage) ogImage.content = post.og_image || post.featured_image || 'images/default-blog.jpg';
+
+    // Inject JSON-LD Schema.org Article
+    injectJsonLD(post, desc);
+}
+
+function injectJsonLD(post, desc) {
+    const schema = document.getElementById('json-ld-schema');
+    if (!schema) return;
+
+    const publishedDate = post.published_at || post.created_at || new Date().toISOString();
+    const modifiedDate = post.updated_at || publishedDate;
+    const imageUrl = post.og_image || post.featured_image || '';
+
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': post.title,
+        'description': desc,
+        'datePublished': publishedDate,
+        'dateModified': modifiedDate,
+        'author': {
+            '@type': 'Person',
+            'name': 'Nguyễn Hà Linh',
+            'url': window.location.origin
+        },
+        'publisher': {
+            '@type': 'Organization',
+            'name': 'HnilahHub',
+            'logo': {
+                '@type': 'ImageObject',
+                'url': window.location.origin + '/images/avatar.jpg'
+            }
+        },
+        'mainEntityOfPage': {
+            '@type': 'WebPage',
+            '@id': window.location.href
+        }
+    };
+
+    if (imageUrl) {
+        jsonLd.image = {
+            '@type': 'ImageObject',
+            'url': imageUrl
+        };
+    }
+
+    schema.textContent = JSON.stringify(jsonLd);
 }
 
 function sharePost(platform) {

@@ -217,6 +217,9 @@ async function initEditor() {
         if(el) el.addEventListener('input', updateSEO);
     });
 
+    // Khởi tạo Tags input
+    initTagsInput();
+
     // Tải danh mục
     await loadCategoriesDropdown();
 
@@ -245,6 +248,9 @@ async function initEditor() {
             document.getElementById('meta-keywords').value = post.meta_keywords || '';
 
             quill.root.innerHTML = post.content || '';
+
+            // Load tags của bài viết
+            await loadPostTagsAdmin(postId);
             
             updateSEO();
         } catch (err) {
@@ -269,6 +275,97 @@ function updateImagePreview(inputId, previewId) {
         }
     }
 }
+
+// === TAGS MANAGEMENT ===
+// Danh sách tags đang chọn (mảng string)
+let selectedTags = [];
+
+function initTagsInput() {
+    const input = document.getElementById('post-tags-input');
+    if (!input) return;
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            const val = input.value.trim().replace(/,+$/, '');
+            if (val) addTag(val);
+            input.value = '';
+        }
+    });
+    input.addEventListener('blur', () => {
+        const val = input.value.trim().replace(/,+$/, '');
+        if (val) addTag(val);
+        input.value = '';
+    });
+}
+
+function addTag(name) {
+    const slug = generateSlug(name);
+    if (!slug || selectedTags.find(t => t.slug === slug)) return;
+    selectedTags.push({ name: name.trim(), slug });
+    renderTagsPreview();
+}
+
+function removeTag(slug) {
+    selectedTags = selectedTags.filter(t => t.slug !== slug);
+    renderTagsPreview();
+}
+
+function renderTagsPreview() {
+    const container = document.getElementById('tags-preview');
+    if (!container) return;
+    container.innerHTML = selectedTags.map(t => `
+        <span style="display:inline-flex; align-items:center; gap:4px; background:rgba(99,102,241,0.15); color:var(--accent,#6366f1); padding:3px 10px; border-radius:20px; font-size:0.8rem;">
+            #${escapeHtml(t.name)}
+            <button type="button" onclick="removeTag('${escapeHtml(t.slug)}')" style="background:none; border:none; color:inherit; cursor:pointer; padding:0; line-height:1; font-size:1rem;">&times;</button>
+        </span>
+    `).join('');
+}
+
+async function loadPostTagsAdmin(postId) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('post_tags')
+            .select('tags(name, slug)')
+            .eq('post_id', postId);
+        if (error) throw error;
+        selectedTags = (data || []).map(pt => ({ name: pt.tags.name, slug: pt.tags.slug }));
+        renderTagsPreview();
+    } catch(err) {
+        console.warn('Lỗi load tags:', err);
+    }
+}
+
+async function savePostTags(postId) {
+    if (!postId || selectedTags.length === 0) {
+        // Xóa hết tags nếu không còn tag nào
+        if (postId) {
+            await supabaseClient.from('post_tags').delete().eq('post_id', postId);
+        }
+        return;
+    }
+    try {
+        // Upsert từng tag vào bảng tags
+        const tagUpserts = selectedTags.map(t => ({ name: t.name, slug: t.slug }));
+        await supabaseClient.from('tags').upsert(tagUpserts, { onConflict: 'slug', ignoreDuplicates: true });
+
+        // Lấy IDs của các tags
+        const { data: tagRows } = await supabaseClient
+            .from('tags')
+            .select('id, slug')
+            .in('slug', selectedTags.map(t => t.slug));
+
+        // Xóa tags cũ rồi insert mới (đảm bảo đồng bộ)
+        await supabaseClient.from('post_tags').delete().eq('post_id', postId);
+        if (tagRows && tagRows.length > 0) {
+            const postTagRows = tagRows.map(t => ({ post_id: postId, tag_id: t.id }));
+            await supabaseClient.from('post_tags').insert(postTagRows);
+        }
+    } catch(err) {
+        console.warn('Lỗi lưu tags:', err);
+    }
+}
+
 
 async function loadCategoriesDropdown() {
     try {
@@ -365,6 +462,9 @@ async function savePost(forceStatus = null) {
         // Update URL to prevent new insert on reload
         const newUrl = window.location.pathname + '?id=' + currentPostId;
         window.history.replaceState({}, '', newUrl);
+
+        // Lưu tags
+        await savePostTags(currentPostId);
 
         showToast(forceStatus === 'draft' ? 'Đã lưu nháp' : 'Đã lưu bài viết');
         

@@ -6,7 +6,7 @@
     <title>Dashboard - HnilahHub Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/dashboard-style.css">
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -57,14 +57,17 @@
                 <a href="#" class="sidebar-link nav-item" data-target="tab-media">
                     <i class="fas fa-images"></i> Thư viện Media
                 </a>
-                <a class="nav-item" data-target="tab-contacts">
+                <a href="#" class="sidebar-link nav-item" data-target="tab-contacts">
                     <i class="fas fa-envelope"></i> Tin nhắn
                 </a>
-                <a class="nav-item" data-target="tab-portfolio">
+                <a href="#" class="sidebar-link nav-item" data-target="tab-portfolio">
                     <i class="fas fa-briefcase"></i> Portfolio
                 </a>
-                <a class="nav-item" data-target="tab-services">
+                <a href="#" class="sidebar-link nav-item" data-target="tab-services">
                     <i class="fas fa-star"></i> Dịch vụ
+                </a>
+                <a href="#" class="sidebar-link nav-item" data-target="tab-users" id="nav-users" style="display:none;">
+                    <i class="fas fa-users"></i> Người dùng
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -277,6 +280,30 @@
                                 </tr>
                             </thead>
                             <tbody id="services-tbody">
+                                <!-- Data render here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <!-- TAB: USERS (chỉ admin thấy) -->
+            <section id="tab-users" class="tab-content">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Quản lý Người dùng</h3>
+                        <small style="color:var(--text-muted)">Mời thành viên qua Supabase Dashboard → Authentication → Invite User</small>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Vai trò</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody">
                                 <!-- Data render here -->
                             </tbody>
                         </table>

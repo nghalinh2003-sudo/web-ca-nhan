@@ -88,11 +88,58 @@ function initAdmin() {
             if (target === 'tab-contacts') loadContacts();
             if (target === 'tab-portfolio') loadPortfolioAdmin();
             if (target === 'tab-services') loadServicesAdmin();
+            if (target === 'tab-users') loadUsersAdmin();
         });
     });
 
+    // Kiểm tra & áp dụng phân quyền
+    checkAndApplyRole();
+
     // Load initial tab
     loadDashboard();
+}
+
+// === PHÂN QUYỀN (Role-based Access Control) ===
+let currentUserRole = 'admin'; // Mặc định admin cho đến khi check xong
+
+async function checkAndApplyRole() {
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
+
+        const { data, error } = await supabaseClient
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id)
+            .single();
+
+        if (error || !data) {
+            // Bảng chưa tạo hoặc user chưa có role → coi là admin
+            currentUserRole = 'admin';
+        } else {
+            currentUserRole = data.role;
+        }
+    } catch (e) {
+        // Fallback: nếu có lỗi thì coi là admin
+        currentUserRole = 'admin';
+    }
+
+    applyRoleUI(currentUserRole);
+}
+
+function applyRoleUI(role) {
+    // Admin: hiện tab Người dùng
+    const navUsers = document.getElementById('nav-users');
+    if (navUsers && role === 'admin') {
+        navUsers.style.display = 'flex';
+    }
+
+    // Viewer: ẩn các nút thêm/sửa/xóa
+    if (role === 'viewer') {
+        document.querySelectorAll('.btn-primary, .btn-icon.delete, [onclick*="openEditor"], [onclick*="openPortfolioModal"], [onclick*="openServiceModal"], [onclick*="openCategoryModal"]').forEach(el => {
+            el.style.display = 'none';
+        });
+    }
 }
 
 // === UTILS ===
@@ -666,5 +713,77 @@ async function searchContacts(query) {
     } catch (err) {
         console.error(err);
         showToast('Lỗi tìm kiếm tin nhắn', 'error');
+    }
+}
+
+// === QUẢN LÝ NGƯỜI DÙNG ===
+async function loadUsersAdmin() {
+    const tbody = document.getElementById('users-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr>';
+
+    try {
+        // Lấy danh sách role từ bảng user_roles
+        const { data: roles, error } = await supabaseClient
+            .from('user_roles')
+            .select('user_id, role, created_at');
+
+        if (error) throw error;
+
+        if (!roles || roles.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Chưa có người dùng nào trong bảng user_roles.<br><small>Hãy chạy migration 002 và gán role cho tài khoản của bạn.</small></td></tr>';
+            return;
+        }
+
+        const roleLabels = { admin: '👑 Admin', editor: '✏️ Editor', viewer: '👁️ Viewer' };
+
+        tbody.innerHTML = roles.map(u => `
+            <tr>
+                <td><small style="font-family:monospace; color:var(--text-muted)">${u.user_id.substring(0,8)}...</small></td>
+                <td>
+                    <select onchange="updateUserRole('${u.user_id}', this.value)" style="padding:4px 8px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-primary)">
+                        <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>👑 Admin</option>
+                        <option value="editor" ${u.role === 'editor' ? 'selected' : ''}>✏️ Editor</option>
+                        <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>👁️ Viewer</option>
+                    </select>
+                </td>
+                <td><small>${formatDate(u.created_at)}</small></td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn-icon delete" onclick="deleteUserRole('${u.user_id}')" title="Xóa khỏi danh sách"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--danger)">Lỗi tải dữ liệu người dùng. Hãy chắc chắn đã chạy migration 002.</td></tr>';
+    }
+}
+
+async function updateUserRole(userId, newRole) {
+    try {
+        const { error } = await supabaseClient
+            .from('user_roles')
+            .update({ role: newRole })
+            .eq('user_id', userId);
+        if (error) throw error;
+        showToast(`Đã cập nhật vai trò thành ${newRole}`);
+    } catch (err) {
+        console.error(err);
+        showToast('Lỗi cập nhật vai trò', 'error');
+    }
+}
+
+async function deleteUserRole(userId) {
+    if (!confirm('Xóa người dùng này khỏi hệ thống phân quyền? Họ sẽ không còn truy cập được admin.')) return;
+    try {
+        const { error } = await supabaseClient.from('user_roles').delete().eq('user_id', userId);
+        if (error) throw error;
+        showToast('Đã xóa người dùng');
+        loadUsersAdmin();
+    } catch (err) {
+        console.error(err);
+        showToast('Lỗi khi xóa', 'error');
     }
 }
