@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
 
 /* ==========================================================================
    BIẾN CSS TÙY CHỈNH (VARIABLES)
@@ -1653,3 +1653,221 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+/* ==========================================================================
+   MULTI-PAGE STYLES — Các trang riêng biệt
+   ========================================================================== */
+
+/* --- Active nav link --- */
+.nav-links a.nav-active {
+  color: var(--clr-primary);
+  font-weight: 700;
+}
+
+/* --- Page Hero (tiêu đề trang nội trang) --- */
+.page-hero {
+  padding: 140px 0 60px;
+  background: linear-gradient(135deg, var(--clr-bg-alt) 0%, var(--clr-bg-main) 100%);
+  border-bottom: 1px solid var(--clr-border);
+  text-align: center;
+}
+
+.page-hero-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.page-hero-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-family: var(--font-heading);
+  color: var(--clr-text-primary);
+  margin: 0.5rem 0 1rem;
+  line-height: 1.2;
+}
+
+.page-hero-desc {
+  font-size: 1.1rem;
+  color: var(--clr-text-secondary);
+  line-height: 1.7;
+}
+
+/* --- Teaser sections (trang chủ) --- */
+.home-teaser {
+  padding: 80px 0;
+}
+
+.home-teaser--alt {
+  background-color: var(--clr-bg-alt);
+}
+
+.teaser-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.teaser-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.teaser-text {
+  font-size: 1.05rem;
+  color: var(--clr-text-secondary);
+  line-height: 1.8;
+}
+
+.teaser-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.teaser-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.teaser-stat strong {
+  font-size: 1.8rem;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: var(--clr-primary);
+  line-height: 1;
+}
+
+.teaser-stat span {
+  font-size: 0.85rem;
+  color: var(--clr-text-secondary);
+}
+
+.teaser-image .about-image-wrapper {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-hover);
+}
+
+.teaser-cta {
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* --- About CTA box (dùng lại ở các trang about, portfolio, services) --- */
+.about-cta-section,
+.portfolio-cta-section,
+.services-cta-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--clr-bg-alt) 0%, var(--clr-bg-main) 100%);
+}
+
+.about-cta-box {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--clr-card-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: 20px;
+  padding: 50px 40px;
+  box-shadow: var(--shadow-light);
+}
+
+.about-cta-box h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 1rem;
+}
+
+.about-cta-box p {
+  color: var(--clr-text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.about-cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* --- Home Contact CTA section --- */
+.home-contact-cta {
+  padding: 80px 0;
+  background: var(--clr-primary);
+}
+
+.home-cta-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.home-cta-content h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.home-cta-content p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.05rem;
+}
+
+.home-cta-actions {
+  display: flex;
+  gap: 16px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.home-contact-cta .btn-primary {
+  background: #fff;
+  color: var(--clr-primary);
+  border-color: #fff;
+}
+
+.home-contact-cta .btn-primary:hover {
+  background: var(--clr-bg-alt);
+}
+
+/* --- Responsive cho multi-page --- */
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 120px 0 40px;
+  }
+
+  .teaser-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .teaser-image {
+    order: -1;
+  }
+
+  .teaser-stats {
+    gap: 20px;
+  }
+
+  .about-cta-box {
+    padding: 36px 24px;
+  }
+
+  .about-cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-cta-box {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .home-cta-actions {
+    justify-content: center;
+  }
+}

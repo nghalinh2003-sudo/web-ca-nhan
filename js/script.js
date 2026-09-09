@@ -379,16 +379,25 @@ function renderPortfolioModal(item) {
 }
 
 async function loadPortfolio() {
+    // Hỗ trợ cả trang chủ (home-portfolio-grid) lẫn trang portfolio đầy đủ
     const grid = document.querySelector('.portfolio-grid');
     const modalsContainer = document.getElementById('portfolio-modals-container');
     if (!grid) return;
 
+    // Kiểm tra xem đây có phải trang chủ không (chỉ lấy 3 dự án đầu)
+    const isHomePage = grid.id === 'home-portfolio-grid';
+    const limit = isHomePage ? 3 : 100;
+
     try {
-        const { data, error } = await supabaseClient
+        let query = supabaseClient
             .from('portfolio_items')
             .select('*')
             .eq('is_visible', true)
             .order('display_order', { ascending: true });
+
+        if (isHomePage) query = query.limit(limit);
+
+        const { data, error } = await query;
 
         if (error) throw error;
 
@@ -491,7 +500,7 @@ function renderServiceCard(service) {
             <ul class="service-checklist">
                 ${featuresHTML}
             </ul>
-            <a href="#contact" class="service-cta">
+            <a href="contact.html" class="service-cta">
                 Liên hệ báo giá <i class="fas fa-arrow-right"></i>
             </a>
         </div>

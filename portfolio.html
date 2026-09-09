@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>Dự Án — Portfolio | HnilahHub</title>
+    <meta name="description" content="Khám phá các dự án content creation, video production và social media của Nguyễn Hà Linh. Kết quả thực tế từ các thương hiệu đồng hành.">
+    <meta name="keywords" content="portfolio, dự án, content creator, video content, social media, Nguyễn Hà Linh">
+    <meta name="author" content="Nguyễn Hà Linh">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dự Án — Portfolio | HnilahHub">
+    <meta property="og:description" content="Kết quả nói lên năng lực. Đây là những câu chuyện thành công của Nguyễn Hà Linh.">
+    <meta property="og:image" content="images/avatar.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ============================================
+         HEADER / NAVIGATION BAR
+         ============================================ -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"> Hnilah<span>Hub</span></a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="about.html">Về tôi</a>
+                <a href="portfolio.html" class="nav-active">Dự án</a>
+                <a href="services.html">Dịch vụ</a>
+                <a href="blog.html">Blog</a>
+                <a href="contact.html">Liên hệ</a>
+                <a href="contact.html" class="btn btn-cta-nav">Hợp tác ngay</a>
+            </nav>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+
+
+    <!-- ============================================
+         PAGE HERO — Tiêu đề trang
+         ============================================ -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="page-hero-content" data-animate>
+                <span class="section-tag">Portfolio</span>
+                <h1 class="page-hero-title">Dự Án Tiêu Biểu</h1>
+                <p class="page-hero-desc">Kết quả nói lên năng lực. Đây là những câu chuyện thành công.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================================
+         PORTFOLIO — Toàn bộ lưới dự án
+         ============================================ -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <!-- Filter Tabs -->
+            <div class="portfolio-filters" data-animate>
+                <button class="filter-btn active" data-filter="all">Tất cả</button>
+                <button class="filter-btn" data-filter="video">Video Content</button>
+                <button class="filter-btn" data-filter="social">Social Media</button>
+            </div>
+
+            <!-- Portfolio Grid — dữ liệu tải động từ Supabase -->
+            <div class="portfolio-grid">
+                <div id="portfolio-loading" style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--clr-text-secondary)">
+                    <i class="fas fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;"></i>
+                    <p>Đang tải dự án...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container modal portfolio — được render động bởi JS -->
+        <div id="portfolio-modals-container"></div>
+    </section>
+
+
+    <!-- ============================================
+         CTA — Hợp tác
+         ============================================ -->
+    <section class="portfolio-cta-section">
+        <div class="container">
+            <div class="about-cta-box" data-animate>
+                <h2>Bạn muốn dự án tiếp theo là của mình?</h2>
+                <p>Hãy liên hệ để bàn về ý tưởng và mục tiêu của thương hiệu bạn.</p>
+                <div class="about-cta-actions">
+                    <a href="services.html" class="btn btn-secondary">
+                        <i class="fas fa-list-check"></i> Xem dịch vụ
+                    </a>
+                    <a href="contact.html" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Liên hệ ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="logo"> Hnilah<span>Hub</span></a>
+                <p class="footer-tagline">Biến ý tưởng thành nội dung — biến nội dung thành tăng trưởng.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết</h4>
+                <nav>
+                    <a href="about.html">Về tôi</a>
+                    <a href="portfolio.html">Dự án</a>
+                    <a href="services.html">Dịch vụ</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="contact.html">Liên hệ</a>
+                </nav>
+            </div>
+            <div class="footer-social">
+                <h4>Kết nối</h4>
+                <div class="footer-social-icons">
+                    <a href="https://www.tiktok.com/@gockhuatlambanh" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/himtarot?locale=vi_VN" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 HnilahHub. Thiết kế với <i class="fas fa-heart" style="color: #FF6B81;"></i> bởi Nguyễn Hà Linh.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back To Top -->
+    <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
