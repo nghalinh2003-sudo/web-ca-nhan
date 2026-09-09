@@ -564,13 +564,18 @@ async function handleContactFormSubmit(e) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
 
     try {
+        const nameField = form.querySelector('[name="name"]');
+        const emailField = form.querySelector('[name="email"]');
+        const serviceField = form.querySelector('[name="service"]');
+        const messageField = form.querySelector('[name="message"]');
+
         const { error } = await supabaseClient
             .from('contacts')
             .insert({
-                name:    form.querySelector('[name="name"]').value.trim(),
-                email:   form.querySelector('[name="email"]').value.trim(),
-                service: form.querySelector('[name="service"]')?.value || null,
-                message: form.querySelector('[name="message"]').value.trim()
+                name:    nameField ? nameField.value.trim() : 'Khách',
+                email:   emailField ? emailField.value.trim() : '',
+                service: serviceField ? serviceField.value : null,
+                message: messageField ? messageField.value.trim() : ''
             });
 
         if (error) throw error;
