@@ -335,8 +335,9 @@ async function loadPortfolioAdmin() {
         }
 
         tbody.innerHTML = data.map(item => {
-            const catNames = { video: 'Video Content', social: 'Social Media' };
+            const catNames = { video: 'Video Content', social: 'Social Media', strategy: 'Content Strategy' };
             const isVisible = item.is_visible ? '<span class="badge badge-new">Hiện</span>' : '<span class="badge badge-done">Ẩn</span>';
+            const hasContent = item.content ? '<span title="Có bài viết chi tiết" style="color:var(--success); font-size:0.75rem;"><i class="fas fa-file-alt"></i> Có bài</span>' : '';
             
             return `
                 <tr>
@@ -347,6 +348,7 @@ async function loadPortfolioAdmin() {
                             <div>
                                 <strong>${escapeHtml(item.title)}</strong><br>
                                 <small style="color:var(--text-muted)">${truncate(escapeHtml(item.description), 40)}</small>
+                                ${hasContent}
                             </div>
                         </div>
                     </td>
@@ -354,7 +356,8 @@ async function loadPortfolioAdmin() {
                     <td>${isVisible}</td>
                     <td>
                         <div class="action-btns">
-                            <button class="btn-icon" onclick="editPortfolio('${item.id}')" title="Sửa"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="openEditor('${item.id}', 'project')" title="Viết bài chi tiết" style="color:var(--accent)"><i class="fas fa-pen-nib"></i></button>
+                            <button class="btn-icon" onclick="editPortfolio('${item.id}')" title="Chỉnh sửa nhanh"><i class="fas fa-edit"></i></button>
                             <button class="btn-icon delete" onclick="deletePortfolio('${item.id}')" title="Xóa"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>
@@ -480,6 +483,7 @@ async function loadServicesAdmin() {
 
         tbody.innerHTML = data.map(item => {
             const isVisible = item.is_visible ? '<span class="badge badge-new">Hiện</span>' : '<span class="badge badge-done">Ẩn</span>';
+            const hasContent = item.content ? '<span title="Có trang nội dung" style="color:var(--success); font-size:0.75rem;"><i class="fas fa-file-alt"></i> Có trang</span>' : '';
             
             return `
                 <tr>
@@ -490,13 +494,15 @@ async function loadServicesAdmin() {
                             <div>
                                 <strong>${escapeHtml(item.title)}</strong><br>
                                 <small style="color:var(--text-muted)">${truncate(escapeHtml(item.description), 60)}</small>
+                                ${hasContent}
                             </div>
                         </div>
                     </td>
                     <td>${isVisible}</td>
                     <td>
                         <div class="action-btns">
-                            <button class="btn-icon" onclick="editService('${item.id}')" title="Sửa"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="openEditor('${item.id}', 'service')" title="Viết trang dịch vụ" style="color:var(--accent)"><i class="fas fa-pen-nib"></i></button>
+                            <button class="btn-icon" onclick="editService('${item.id}')" title="Chỉnh sửa nhanh"><i class="fas fa-edit"></i></button>
                             <button class="btn-icon delete" onclick="deleteService('${item.id}')" title="Xóa"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>

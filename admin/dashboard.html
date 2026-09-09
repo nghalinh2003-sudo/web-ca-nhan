@@ -6,11 +6,11 @@
     <title>Dashboard - HnilahHub Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="/admin/css/dashboard-style.css">
+    <link rel="stylesheet" href="css/dashboard-style.css">
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script src="/js/supabase-config.js"></script>
+    <script src="../js/supabase-config.js"></script>
 </head>
 <body>
     <!-- MÀN HÌNH ĐĂNG NHẬP (Chỉ hiện khi chưa đăng nhập) -->
@@ -237,9 +237,14 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h3>Danh sách dự án</h3>
-                        <button class="btn btn-primary" onclick="openPortfolioModal()">
-                            <i class="fas fa-plus"></i> Thêm dự án
-                        </button>
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                            <button class="btn btn-outline" onclick="openPortfolioModal()">
+                                <i class="fas fa-plus"></i> Thêm nhanh
+                            </button>
+                            <button class="btn btn-primary" onclick="openEditor('', 'project')">
+                                <i class="fas fa-pen-nib"></i> Viết bài dự án
+                            </button>
+                        </div>
                     </div>
                     <div style="overflow-x:auto;">
                         <table>
@@ -265,9 +270,14 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h3>Dịch vụ cung cấp</h3>
-                        <button class="btn btn-primary" onclick="openServiceModal()">
-                            <i class="fas fa-plus"></i> Thêm dịch vụ
-                        </button>
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                            <button class="btn btn-outline" onclick="openServiceModal()">
+                                <i class="fas fa-plus"></i> Thêm nhanh
+                            </button>
+                            <button class="btn btn-primary" onclick="openEditor('', 'service')">
+                                <i class="fas fa-pen-nib"></i> Viết trang dịch vụ
+                            </button>
+                        </div>
                     </div>
                     <div style="overflow-x:auto;">
                         <table>
@@ -518,8 +528,8 @@
     <!-- Toast Container -->
     <div id="toast-container" class="toast-container"></div>
 
-    <script src="/admin/js/admin.js"></script>
-    <script src="/admin/js/media.js"></script>
-    <script src="/admin/js/posts.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/media.js"></script>
+    <script src="js/posts.js"></script>
 </body>
 </html>
