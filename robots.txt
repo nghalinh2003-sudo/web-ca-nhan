@@ -1,0 +1,12 @@
+﻿# Robots.txt — halinhnguyenn.id.vn
+# Cho phép tất cả các bot thu thập dữ liệu
+
+User-agent: *
+Allow: /
+
+# Chặn các thư mục không cần index
+Disallow: /admin/
+Disallow: /js/supabase-config.js
+
+# Khai báo Sitemap để Google Bot tìm thấy dễ dàng
+Sitemap: https://www.halinhnguyenn.id.vn/sitemap.xml

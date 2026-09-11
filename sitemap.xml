@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Trang chủ — ưu tiên cao nhất -->
+  <url>
+    <loc>https://www.halinhnguyenn.id.vn/</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Trang Về tôi -->
+  <url>
+    <loc>https://www.halinhnguyenn.id.vn/about.html</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Trang Dịch vụ -->
+  <url>
+    <loc>https://www.halinhnguyenn.id.vn/services.html</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Trang Portfolio / Dự án -->
+  <url>
+    <loc>https://www.halinhnguyenn.id.vn/portfolio.html</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Trang Blog -->
+  <url>
+    <loc>https://www.halinhnguyenn.id.vn/blog.html</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Trang Liên hệ -->
+  <url>
+    <loc>https://www.halinhnguyenn.id.vn/contact.html</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
