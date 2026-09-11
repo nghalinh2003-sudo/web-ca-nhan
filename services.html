@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta name="google-site-verification" content="ZfECk33TPtn09sJw1Wm8qTYjJQklerCXcwoLOzwTiWw" />
@@ -43,6 +43,49 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Schema Markup: Service -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Dịch vụ Content Creator & Social Media",
+      "provider": {
+        "@type": "Person",
+        "name": "Nguyễn Hà Linh",
+        "url": "https://www.halinhnguyenn.id.vn"
+      },
+      "areaServed": "Vietnam",
+      "description": "Cung cấp các dịch vụ sáng tạo nội dung số, sản xuất video ngắn (TikTok/Reels), quản lý mạng xã hội và chụp/thiết kế ảnh chuyên nghiệp.",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Danh mục dịch vụ chính",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Sản xuất Video Content"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Quản lý Social Media (Fanpage, TikTok)"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Chụp & Thiết kế ảnh"
+            }
+          }
+        ]
+      }
+    }
+    </script>
 </head>
 <body>
 
@@ -93,6 +136,11 @@
          ============================================ -->
     <section class="services" id="services">
         <div class="container">
+            <!-- SEO/AEO Static Content -->
+            <div class="seo-static-content" style="margin-bottom: 2.5rem; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto; color: var(--clr-text-secondary);">
+                <p>Tôi cung cấp các giải pháp xây dựng thương hiệu trực tuyến toàn diện bao gồm: <strong>Sản xuất Video Content (TikTok, Reels, Shorts)</strong>, <strong>Quản lý Fanpage/Social Media</strong> và <strong>Chụp & Thiết kế ảnh</strong>. Dưới đây là thông tin chi tiết về các gói dịch vụ giúp thương hiệu của bạn tiếp cận đúng đối tượng khách hàng mục tiêu.</p>
+            </div>
+
             <!-- Services Grid — dữ liệu tải động từ Supabase -->
             <div class="services-grid">
                 <div id="services-loading" style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--clr-text-secondary)">
