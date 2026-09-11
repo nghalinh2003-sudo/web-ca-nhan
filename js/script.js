@@ -401,7 +401,12 @@ async function loadPortfolio() {
 
         if (error) throw error;
 
-        grid.innerHTML = data.map(renderPortfolioCard).join('');
+        if (data.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--clr-text-secondary)"><h3>Chưa có dự án</h3></div>';
+        } else {
+            grid.innerHTML = data.map(renderPortfolioCard).join('');
+        }
+        
         if (modalsContainer) {
             modalsContainer.innerHTML = data.map(renderPortfolioModal).join('');
         }
