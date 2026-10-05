@@ -76,6 +76,20 @@ async function loadBlogPosts(page = 1, categorySlug = null, searchQuery = null) 
         if (data && data.length > 0) {
             grid.innerHTML = data.map(renderPostCard).join('');
             renderPagination(page, Math.ceil(count / POSTS_PER_PAGE));
+            
+            // Áp dụng animation cho thẻ blog
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.blog-card').forEach((el, index) => {
+                el.style.transitionDelay = `${(index % 3) * 0.1}s`;
+                obs.observe(el);
+            });
         } else {
             grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Không tìm thấy bài viết nào.</p>';
             renderPagination(1, 1);
@@ -255,6 +269,19 @@ async function loadRelatedPosts(categoryId, currentPostId) {
         
         if (data && data.length > 0) {
             grid.innerHTML = data.map(renderPostCard).join('');
+            
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('#relatedPostsGrid .blog-card').forEach((el, index) => {
+                el.style.transitionDelay = `${(index % 3) * 0.1}s`;
+                obs.observe(el);
+            });
         } else {
             document.getElementById('relatedPostsSection').style.display = 'none';
         }
