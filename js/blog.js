@@ -102,7 +102,7 @@ async function loadBlogPosts(page = 1, categorySlug = null, searchQuery = null) 
 }
 
 function renderPostCard(post) {
-    const imageUrl = post.featured_image || 'images/default-blog.jpg';
+    const imageUrl = post.featured_image || 'images/avatar.jpg';
     const categoryName = post.categories ? post.categories.name : 'Chưa phân loại';
     const readTime = calculateReadingTime(post.content);
     
@@ -230,7 +230,7 @@ function renderPostDetail(post) {
     document.getElementById('postReadTime').textContent = calculateReadingTime(post.content);
     
     // Feature image
-    const imgUrl = post.featured_image || 'images/default-blog.jpg';
+    const imgUrl = post.featured_image || 'images/avatar.jpg';
     document.getElementById('postImage').src = imgUrl;
     document.getElementById('postImage').alt = post.title;
     
@@ -327,7 +327,7 @@ function setMetaTags(post) {
     if (ogDesc) ogDesc.content = desc;
     
     let ogImage = document.querySelector('meta[property="og:image"]');
-    if (ogImage) ogImage.content = post.og_image || post.featured_image || 'images/default-blog.jpg';
+    if (ogImage) ogImage.content = post.og_image || post.featured_image || 'images/avatar.jpg';
 
     // Inject JSON-LD Schema.org Article
     injectJsonLD(post, desc);
