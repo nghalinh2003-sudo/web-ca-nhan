@@ -46,7 +46,12 @@ async function loadBlogPosts(page = 1, categorySlug = null, searchQuery = null) 
     currentCategory = categorySlug;
     currentSearch = searchQuery;
     
-    let query = supabaseClient.from('posts').select('*, categories!inner(name, slug)', { count: 'exact' })
+    let selectQuery = '*, categories(name, slug)';
+    if (categorySlug && categorySlug !== 'all') {
+        selectQuery = '*, categories!inner(name, slug)';
+    }
+
+    let query = supabaseClient.from('posts').select(selectQuery, { count: 'exact' })
         .eq('status', 'published')
         .order('published_at', { ascending: false });
 
