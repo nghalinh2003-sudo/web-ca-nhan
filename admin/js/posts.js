@@ -83,6 +83,7 @@ async function loadPosts(filter = 'all') {
                     <td><small>${formatDate(post.created_at)}</small></td>
                     <td>
                         <div class="action-btns">
+                            ${post.status !== 'published' ? `<button class="btn-icon" onclick="quickPublish('${post.id}')" title="Đăng bài" style="color:var(--success)"><i class="fas fa-paper-plane"></i></button>` : ''}
                             <button class="btn-icon" onclick="openEditor('${post.id}', 'blog')" title="Sửa"><i class="fas fa-edit"></i></button>
                             <button class="btn-icon delete" onclick="deletePost('${post.id}')" title="Xóa"><i class="fas fa-trash"></i></button>
                         </div>
@@ -155,6 +156,23 @@ async function loadCategoriesAdmin() {
     } catch(err) {
         console.error('Lỗi tải danh mục:', err);
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--danger)">Lỗi tải dữ liệu</td></tr>';
+    }
+}
+
+async function quickPublish(id) {
+    if(!confirm('Bạn có chắc chắn muốn xuất bản bài viết này?')) return;
+    try {
+        const payload = {
+            status: 'published',
+            published_at: new Date().toISOString()
+        };
+        const { error } = await supabaseClient.from('posts').update(payload).eq('id', id);
+        if (error) throw error;
+        showToast('Đã xuất bản bài viết!');
+        loadPosts();
+    } catch(err) {
+        console.error(err);
+        showToast('Lỗi khi xuất bản bài viết', 'error');
     }
 }
 
@@ -254,6 +272,10 @@ async function initEditor() {
             const el = document.getElementById(id);
             if (el) el.addEventListener('input', updateSEO);
         });
+        
+        const statusEl = document.getElementById('post-status');
+        if (statusEl) statusEl.addEventListener('change', updateButtonsState);
+        
         initTagsInput();
         await loadCategoriesDropdown();
     }
@@ -280,8 +302,32 @@ function applyEditorType(type) {
     document.getElementById('panel-project').style.display = (type === 'project') ? 'block' : 'none';
     document.getElementById('panel-service').style.display = (type === 'service') ? 'block' : 'none';
 
-    // Nút lưu nháp chỉ dành cho Blog
-    document.getElementById('btn-draft').style.display = (type === 'blog') ? 'inline-flex' : 'none';
+    updateButtonsState();
+}
+
+function updateButtonsState() {
+    const type = new URLSearchParams(window.location.search).get('type') || 'blog';
+    const status = document.getElementById('post-status')?.value || 'draft';
+    
+    const btnDraft = document.getElementById('btn-draft');
+    const btnPublish = document.getElementById('btn-publish');
+    const btnSaveText = document.getElementById('btn-save-text');
+
+    if (type === 'blog') {
+        if (status === 'published') {
+            if (btnDraft) btnDraft.style.display = 'none';
+            if (btnPublish) btnPublish.style.display = 'none';
+            if (btnSaveText) btnSaveText.textContent = 'Cập nhật';
+        } else {
+            if (btnDraft) btnDraft.style.display = 'inline-flex';
+            if (btnPublish) btnPublish.style.display = 'inline-flex';
+            if (btnSaveText) btnSaveText.textContent = 'Lưu thay đổi';
+        }
+    } else {
+        if (btnDraft) btnDraft.style.display = 'none';
+        if (btnPublish) btnPublish.style.display = 'none';
+        if (btnSaveText) btnSaveText.textContent = 'Lưu lại';
+    }
 }
 
 // Tải dữ liệu hiện có vào editor để sửa
@@ -308,6 +354,7 @@ async function loadItemForEdit(id, type) {
             quill.root.innerHTML = data.content || '';
             await loadPostTagsAdmin(id);
             updateSEO();
+            updateButtonsState();
 
         } else if (type === 'project') {
             ({ data, error } = await supabaseClient.from('portfolio_items').select('*').eq('id', id).single());
@@ -390,7 +437,13 @@ async function savePost(forceStatus = null) {
 async function saveBlogPost(forceStatus) {
     const userSession = await supabaseClient.auth.getSession();
     const userId = userSession.data.session?.user?.id;
-    const status = forceStatus || document.getElementById('post-status').value;
+    
+    // Nếu click nút Đăng hoặc Lưu nháp, cập nhật lại dropdown trạng thái
+    if (forceStatus) {
+        document.getElementById('post-status').value = forceStatus;
+    }
+    
+    const status = document.getElementById('post-status').value;
     const title = document.getElementById('post-title').value.trim();
     const slug = document.getElementById('post-slug').value || generateSlug(title);
 
@@ -422,7 +475,8 @@ async function saveBlogPost(forceStatus) {
     currentPostId = res.data.id;
     window.history.replaceState({}, '', `editor.html?type=blog&id=${currentPostId}`);
     await savePostTags(currentPostId);
-    showToast(forceStatus === 'draft' ? 'Đã lưu nháp' : 'Đã lưu bài viết');
+    showToast(status === 'draft' ? 'Đã lưu nháp' : 'Đã lưu và xuất bản bài viết');
+    updateButtonsState();
 }
 
 // Lưu bài Dự án

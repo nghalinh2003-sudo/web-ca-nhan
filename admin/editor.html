@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -36,8 +36,12 @@
             <button class="btn btn-outline" id="btn-draft" onclick="savePost('draft')" style="display:none;">
                 <i class="fas fa-file-alt"></i> Lưu nháp
             </button>
+            <!-- Nút Đăng bài cho Blog -->
+            <button class="btn btn-primary" id="btn-publish" onclick="savePost('published')" style="display:none; background-color: var(--success); border-color: var(--success);">
+                <i class="fas fa-paper-plane"></i> Đăng bài
+            </button>
             <button class="btn btn-primary" id="btn-save" onclick="savePost()">
-                <i class="fas fa-save"></i> Lưu lại
+                <i class="fas fa-save"></i> <span id="btn-save-text">Lưu lại</span>
             </button>
         </div>
     </header>
