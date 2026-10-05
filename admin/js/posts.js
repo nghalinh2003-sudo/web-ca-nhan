@@ -187,6 +187,30 @@ async function initEditor() {
     applyEditorType(currentEditorType);
 
     // Khởi tạo Quill
+    const ImageBlot = Quill.import('formats/image');
+    class CustomImage extends ImageBlot {
+        static create(value) {
+            let node = super.create(value);
+            if (typeof value === 'object') {
+                node.setAttribute('src', value.url);
+                if (value.alt) {
+                    node.setAttribute('alt', value.alt);
+                }
+            } else {
+                node.setAttribute('src', value);
+                node.setAttribute('alt', 'Ảnh minh họa');
+            }
+            return node;
+        }
+        static value(node) {
+            return {
+                url: node.getAttribute('src'),
+                alt: node.getAttribute('alt')
+            };
+        }
+    }
+    Quill.register(CustomImage, true);
+
     quill = new Quill('#editor-container', {
         theme: 'snow',
         modules: {
@@ -205,8 +229,9 @@ async function initEditor() {
     // Chèn ảnh qua Media Picker
     quill.getModule('toolbar').addHandler('image', () => {
         openMediaPicker((url) => {
-            const range = quill.getSelection();
-            quill.insertEmbed(range.index, 'image', url);
+            const range = quill.getSelection(true) || { index: quill.getLength() };
+            const altText = prompt('Nhập mô tả ảnh (Alt text) cho chuẩn SEO:', '') || '';
+            quill.insertEmbed(range.index, 'image', { url: url, alt: altText });
         });
     });
 
