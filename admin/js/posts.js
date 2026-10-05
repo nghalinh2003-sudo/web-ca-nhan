@@ -276,6 +276,12 @@ async function initEditor() {
         const statusEl = document.getElementById('post-status');
         if (statusEl) statusEl.addEventListener('change', updateButtonsState);
         
+        const pfVisibleEl = document.getElementById('pf_visible');
+        if (pfVisibleEl) pfVisibleEl.addEventListener('change', updateButtonsState);
+
+        const svVisibleEl = document.getElementById('sv_visible');
+        if (svVisibleEl) svVisibleEl.addEventListener('change', updateButtonsState);
+        
         initTagsInput();
         await loadCategoriesDropdown();
     }
@@ -307,26 +313,28 @@ function applyEditorType(type) {
 
 function updateButtonsState() {
     const type = new URLSearchParams(window.location.search).get('type') || 'blog';
-    const status = document.getElementById('post-status')?.value || 'draft';
     
+    let isPublished = false;
+    if (type === 'blog') {
+        isPublished = document.getElementById('post-status')?.value === 'published';
+    } else if (type === 'project') {
+        isPublished = document.getElementById('pf_visible')?.value === 'true';
+    } else if (type === 'service') {
+        isPublished = document.getElementById('sv_visible')?.value === 'true';
+    }
+
     const btnDraft = document.getElementById('btn-draft');
     const btnPublish = document.getElementById('btn-publish');
     const btnSaveText = document.getElementById('btn-save-text');
 
-    if (type === 'blog') {
-        if (status === 'published') {
-            if (btnDraft) btnDraft.style.display = 'none';
-            if (btnPublish) btnPublish.style.display = 'none';
-            if (btnSaveText) btnSaveText.textContent = 'Cập nhật';
-        } else {
-            if (btnDraft) btnDraft.style.display = 'inline-flex';
-            if (btnPublish) btnPublish.style.display = 'inline-flex';
-            if (btnSaveText) btnSaveText.textContent = 'Lưu thay đổi';
-        }
-    } else {
+    if (isPublished) {
         if (btnDraft) btnDraft.style.display = 'none';
         if (btnPublish) btnPublish.style.display = 'none';
-        if (btnSaveText) btnSaveText.textContent = 'Lưu lại';
+        if (btnSaveText) btnSaveText.textContent = 'Cập nhật';
+    } else {
+        if (btnDraft) btnDraft.style.display = 'inline-flex';
+        if (btnPublish) btnPublish.style.display = 'inline-flex';
+        if (btnSaveText) btnSaveText.textContent = 'Lưu thay đổi';
     }
 }
 
@@ -416,9 +424,9 @@ async function savePost(forceStatus = null) {
         if (currentEditorType === 'blog') {
             await saveBlogPost(forceStatus);
         } else if (currentEditorType === 'project') {
-            await saveProjectPost();
+            await saveProjectPost(forceStatus);
         } else if (currentEditorType === 'service') {
-            await saveServicePost();
+            await saveServicePost(forceStatus);
         }
 
         const saveTime = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
@@ -480,7 +488,13 @@ async function saveBlogPost(forceStatus) {
 }
 
 // Lưu bài Dự án
-async function saveProjectPost() {
+async function saveProjectPost(forceStatus) {
+    if (forceStatus === 'published') {
+        document.getElementById('pf_visible').value = 'true';
+    } else if (forceStatus === 'draft') {
+        document.getElementById('pf_visible').value = 'false';
+    }
+
     const title = document.getElementById('post-title').value.trim();
     const resultsRaw = document.getElementById('pf_results').value;
     const resultsArray = resultsRaw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
@@ -510,10 +524,17 @@ async function saveProjectPost() {
     currentPostId = res.data.id;
     window.history.replaceState({}, '', `editor.html?type=project&id=${currentPostId}`);
     showToast('Đã lưu dự án');
+    updateButtonsState();
 }
 
 // Lưu trang Dịch vụ
-async function saveServicePost() {
+async function saveServicePost(forceStatus) {
+    if (forceStatus === 'published') {
+        document.getElementById('sv_visible').value = 'true';
+    } else if (forceStatus === 'draft') {
+        document.getElementById('sv_visible').value = 'false';
+    }
+
     const title = document.getElementById('post-title').value.trim();
     const featuresRaw = document.getElementById('sv_features').value;
     const featuresArray = featuresRaw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
@@ -540,6 +561,7 @@ async function saveServicePost() {
     currentPostId = res.data.id;
     window.history.replaceState({}, '', `editor.html?type=service&id=${currentPostId}`);
     showToast('Đã lưu dịch vụ');
+    updateButtonsState();
 }
 
 // ===================================================================
