@@ -6,11 +6,19 @@
     <title>Dashboard - HnilahHub Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="/admin/css/dashboard-style.css">
+    <link rel="stylesheet" href="css/dashboard-style.css">
+    <link rel="stylesheet" href="/css/dashboard-style.css">
+    <link rel="stylesheet" href="/admin.css">
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="../js/supabase-config.js"></script>
+    <script>
+        if (typeof supabaseClient === 'undefined') {
+            document.write('<script src="/js/supabase-config.js"><\/script>');
+        }
+    </script>
 </head>
 <body>
     <!-- MÀN HÌNH ĐĂNG NHẬP (Chỉ hiện khi chưa đăng nhập) -->
@@ -57,14 +65,17 @@
                 <a href="#" class="sidebar-link nav-item" data-target="tab-media">
                     <i class="fas fa-images"></i> Thư viện Media
                 </a>
-                <a class="nav-item" data-target="tab-contacts">
+                <a href="#" class="sidebar-link nav-item" data-target="tab-contacts">
                     <i class="fas fa-envelope"></i> Tin nhắn
                 </a>
-                <a class="nav-item" data-target="tab-portfolio">
+                <a href="#" class="sidebar-link nav-item" data-target="tab-portfolio">
                     <i class="fas fa-briefcase"></i> Portfolio
                 </a>
-                <a class="nav-item" data-target="tab-services">
+                <a href="#" class="sidebar-link nav-item" data-target="tab-services">
                     <i class="fas fa-star"></i> Dịch vụ
+                </a>
+                <a href="#" class="sidebar-link nav-item" data-target="tab-users" id="nav-users" style="display:none;">
+                    <i class="fas fa-users"></i> Người dùng
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -234,9 +245,14 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h3>Danh sách dự án</h3>
-                        <button class="btn btn-primary" onclick="openPortfolioModal()">
-                            <i class="fas fa-plus"></i> Thêm dự án
-                        </button>
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                            <button class="btn btn-outline" onclick="openPortfolioModal()">
+                                <i class="fas fa-plus"></i> Thêm nhanh
+                            </button>
+                            <button class="btn btn-primary" onclick="openEditor('', 'project')">
+                                <i class="fas fa-pen-nib"></i> Viết bài dự án
+                            </button>
+                        </div>
                     </div>
                     <div style="overflow-x:auto;">
                         <table>
@@ -262,9 +278,14 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h3>Dịch vụ cung cấp</h3>
-                        <button class="btn btn-primary" onclick="openServiceModal()">
-                            <i class="fas fa-plus"></i> Thêm dịch vụ
-                        </button>
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                            <button class="btn btn-outline" onclick="openServiceModal()">
+                                <i class="fas fa-plus"></i> Thêm nhanh
+                            </button>
+                            <button class="btn btn-primary" onclick="openEditor('', 'service')">
+                                <i class="fas fa-pen-nib"></i> Viết trang dịch vụ
+                            </button>
+                        </div>
                     </div>
                     <div style="overflow-x:auto;">
                         <table>
@@ -277,6 +298,30 @@
                                 </tr>
                             </thead>
                             <tbody id="services-tbody">
+                                <!-- Data render here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <!-- TAB: USERS (chỉ admin thấy) -->
+            <section id="tab-users" class="tab-content">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Quản lý Người dùng</h3>
+                        <small style="color:var(--text-muted)">Mời thành viên qua Supabase Dashboard → Authentication → Invite User</small>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Vai trò</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody">
                                 <!-- Data render here -->
                             </tbody>
                         </table>

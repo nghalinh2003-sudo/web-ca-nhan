@@ -34,19 +34,36 @@ if (loginForm) {
         btn.disabled = true;
         errDiv.style.display = 'none';
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
 
-        if (error) {
-            errDiv.textContent = 'Email hoặc mật khẩu không đúng!';
+            if (error) {
+                const msg = (error.message || '').toLowerCase();
+                if (msg.includes('fetch') || error.status === 0 || !navigator.onLine) {
+                    errDiv.innerHTML = '<strong>Lỗi kết nối máy chủ!</strong><br>Không thể kết nối đến Supabase. Dự án Supabase có thể đang bị tạm dừng (Paused) trên supabase.com hoặc mất kết nối mạng.';
+                } else if (msg.includes('invalid') || msg.includes('credential')) {
+                    errDiv.textContent = 'Email hoặc mật khẩu không chính xác!';
+                } else if (msg.includes('email not confirmed')) {
+                    errDiv.textContent = 'Email tài khoản chưa được xác thực!';
+                } else {
+                    errDiv.textContent = error.message || 'Đăng nhập không thành công!';
+                }
+                errDiv.style.display = 'block';
+                btn.innerHTML = 'Đăng nhập';
+                btn.disabled = false;
+            } else {
+                // Đăng nhập thành công, tải lại trang để ẩn form và hiện dashboard
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error(err);
+            errDiv.innerHTML = '<strong>Lỗi kết nối!</strong><br>Không thể kết nối đến máy chủ Supabase. Vui lòng kiểm tra lại trạng thái dự án trên Supabase Dashboard.';
             errDiv.style.display = 'block';
             btn.innerHTML = 'Đăng nhập';
             btn.disabled = false;
-        } else {
-            // Đăng nhập thành công, tải lại trang để ẩn form và hiện dashboard
-            window.location.reload();
         }
     });
 }
@@ -88,11 +105,58 @@ function initAdmin() {
             if (target === 'tab-contacts') loadContacts();
             if (target === 'tab-portfolio') loadPortfolioAdmin();
             if (target === 'tab-services') loadServicesAdmin();
+            if (target === 'tab-users') loadUsersAdmin();
         });
     });
 
+    // Kiểm tra & áp dụng phân quyền
+    checkAndApplyRole();
+
     // Load initial tab
     loadDashboard();
+}
+
+// === PHÂN QUYỀN (Role-based Access Control) ===
+let currentUserRole = 'admin'; // Mặc định admin cho đến khi check xong
+
+async function checkAndApplyRole() {
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
+
+        const { data, error } = await supabaseClient
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id)
+            .single();
+
+        if (error || !data) {
+            // Bảng chưa tạo hoặc user chưa có role → coi là admin
+            currentUserRole = 'admin';
+        } else {
+            currentUserRole = data.role;
+        }
+    } catch (e) {
+        // Fallback: nếu có lỗi thì coi là admin
+        currentUserRole = 'admin';
+    }
+
+    applyRoleUI(currentUserRole);
+}
+
+function applyRoleUI(role) {
+    // Admin: hiện tab Người dùng
+    const navUsers = document.getElementById('nav-users');
+    if (navUsers && role === 'admin') {
+        navUsers.style.display = 'flex';
+    }
+
+    // Viewer: ẩn các nút thêm/sửa/xóa
+    if (role === 'viewer') {
+        document.querySelectorAll('.btn-primary, .btn-icon.delete, [onclick*="openEditor"], [onclick*="openPortfolioModal"], [onclick*="openServiceModal"], [onclick*="openCategoryModal"]').forEach(el => {
+            el.style.display = 'none';
+        });
+    }
 }
 
 // === UTILS ===
@@ -288,8 +352,9 @@ async function loadPortfolioAdmin() {
         }
 
         tbody.innerHTML = data.map(item => {
-            const catNames = { video: 'Video Content', social: 'Social Media' };
+            const catNames = { video: 'Video Content', social: 'Social Media', strategy: 'Content Strategy' };
             const isVisible = item.is_visible ? '<span class="badge badge-new">Hiện</span>' : '<span class="badge badge-done">Ẩn</span>';
+            const hasContent = item.content ? '<span title="Có bài viết chi tiết" style="color:var(--success); font-size:0.75rem;"><i class="fas fa-file-alt"></i> Có bài</span>' : '';
             
             return `
                 <tr>
@@ -300,6 +365,7 @@ async function loadPortfolioAdmin() {
                             <div>
                                 <strong>${escapeHtml(item.title)}</strong><br>
                                 <small style="color:var(--text-muted)">${truncate(escapeHtml(item.description), 40)}</small>
+                                ${hasContent}
                             </div>
                         </div>
                     </td>
@@ -307,7 +373,8 @@ async function loadPortfolioAdmin() {
                     <td>${isVisible}</td>
                     <td>
                         <div class="action-btns">
-                            <button class="btn-icon" onclick="editPortfolio('${item.id}')" title="Sửa"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="openEditor('${item.id}', 'project')" title="Viết bài chi tiết" style="color:var(--accent)"><i class="fas fa-pen-nib"></i></button>
+                            <button class="btn-icon" onclick="editPortfolio('${item.id}')" title="Chỉnh sửa nhanh"><i class="fas fa-edit"></i></button>
                             <button class="btn-icon delete" onclick="deletePortfolio('${item.id}')" title="Xóa"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>
@@ -433,6 +500,7 @@ async function loadServicesAdmin() {
 
         tbody.innerHTML = data.map(item => {
             const isVisible = item.is_visible ? '<span class="badge badge-new">Hiện</span>' : '<span class="badge badge-done">Ẩn</span>';
+            const hasContent = item.content ? '<span title="Có trang nội dung" style="color:var(--success); font-size:0.75rem;"><i class="fas fa-file-alt"></i> Có trang</span>' : '';
             
             return `
                 <tr>
@@ -443,13 +511,15 @@ async function loadServicesAdmin() {
                             <div>
                                 <strong>${escapeHtml(item.title)}</strong><br>
                                 <small style="color:var(--text-muted)">${truncate(escapeHtml(item.description), 60)}</small>
+                                ${hasContent}
                             </div>
                         </div>
                     </td>
                     <td>${isVisible}</td>
                     <td>
                         <div class="action-btns">
-                            <button class="btn-icon" onclick="editService('${item.id}')" title="Sửa"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="openEditor('${item.id}', 'service')" title="Viết trang dịch vụ" style="color:var(--accent)"><i class="fas fa-pen-nib"></i></button>
+                            <button class="btn-icon" onclick="editService('${item.id}')" title="Chỉnh sửa nhanh"><i class="fas fa-edit"></i></button>
                             <button class="btn-icon delete" onclick="deleteService('${item.id}')" title="Xóa"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>
@@ -666,5 +736,77 @@ async function searchContacts(query) {
     } catch (err) {
         console.error(err);
         showToast('Lỗi tìm kiếm tin nhắn', 'error');
+    }
+}
+
+// === QUẢN LÝ NGƯỜI DÙNG ===
+async function loadUsersAdmin() {
+    const tbody = document.getElementById('users-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr>';
+
+    try {
+        // Lấy danh sách role từ bảng user_roles
+        const { data: roles, error } = await supabaseClient
+            .from('user_roles')
+            .select('user_id, role, created_at');
+
+        if (error) throw error;
+
+        if (!roles || roles.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Chưa có người dùng nào trong bảng user_roles.<br><small>Hãy chạy migration 002 và gán role cho tài khoản của bạn.</small></td></tr>';
+            return;
+        }
+
+        const roleLabels = { admin: '👑 Admin', editor: '✏️ Editor', viewer: '👁️ Viewer' };
+
+        tbody.innerHTML = roles.map(u => `
+            <tr>
+                <td><small style="font-family:monospace; color:var(--text-muted)">${u.user_id.substring(0,8)}...</small></td>
+                <td>
+                    <select onchange="updateUserRole('${u.user_id}', this.value)" style="padding:4px 8px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-primary)">
+                        <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>👑 Admin</option>
+                        <option value="editor" ${u.role === 'editor' ? 'selected' : ''}>✏️ Editor</option>
+                        <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>👁️ Viewer</option>
+                    </select>
+                </td>
+                <td><small>${formatDate(u.created_at)}</small></td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn-icon delete" onclick="deleteUserRole('${u.user_id}')" title="Xóa khỏi danh sách"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--danger)">Lỗi tải dữ liệu người dùng. Hãy chắc chắn đã chạy migration 002.</td></tr>';
+    }
+}
+
+async function updateUserRole(userId, newRole) {
+    try {
+        const { error } = await supabaseClient
+            .from('user_roles')
+            .update({ role: newRole })
+            .eq('user_id', userId);
+        if (error) throw error;
+        showToast(`Đã cập nhật vai trò thành ${newRole}`);
+    } catch (err) {
+        console.error(err);
+        showToast('Lỗi cập nhật vai trò', 'error');
+    }
+}
+
+async function deleteUserRole(userId) {
+    if (!confirm('Xóa người dùng này khỏi hệ thống phân quyền? Họ sẽ không còn truy cập được admin.')) return;
+    try {
+        const { error } = await supabaseClient.from('user_roles').delete().eq('user_id', userId);
+        if (error) throw error;
+        showToast('Đã xóa người dùng');
+        loadUsersAdmin();
+    } catch (err) {
+        console.error(err);
+        showToast('Lỗi khi xóa', 'error');
     }
 }

@@ -10,12 +10,21 @@
     <!-- Quill.js CDN -->
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     
+    <link rel="stylesheet" href="/admin/css/dashboard-style.css">
     <link rel="stylesheet" href="css/dashboard-style.css">
+    <link rel="stylesheet" href="/css/dashboard-style.css">
+    <link rel="stylesheet" href="/admin/css/editor.css">
     <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="/css/editor.css">
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="../js/supabase-config.js"></script>
+    <script>
+        if (typeof supabaseClient === 'undefined') {
+            document.write('<script src="/js/supabase-config.js"><\/script>');
+        }
+    </script>
 </head>
 <body class="editor-body">
     
