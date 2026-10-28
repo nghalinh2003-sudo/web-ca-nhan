@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - HnilahHub Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/admin/css/dashboard-style.css">
+    <link rel="stylesheet" href="css/dashboard-style.css">
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script src="/js/supabase-config.js"></script>
+    <script src="../js/supabase-config.js"></script>
 </head>
 <body class="login-body">
     <div class="login-container">
@@ -32,7 +32,7 @@
             </div>
             
             <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Đăng nhập</button>
-            <a href="/index.html" class="back-link">← Quay lại trang web</a>
+            <a href="../index.html" class="back-link">← Quay lại trang web</a>
         </form>
     </div>
 
@@ -40,13 +40,15 @@
         // Chuyển hướng nếu đã đăng nhập
         supabaseClient.auth.getSession().then(({ data: { session } }) => {
             if (session) {
-                document.getElementById('loginForm').innerHTML = '<div style="text-align:center"><h3 style="color:var(--success);margin-bottom:1rem">Đã đăng nhập thành công!</h3><a href="/admin/dashboard.html" class="btn btn-primary btn-block">Vào Bảng Điều Khiển</a></div>';
+                document.getElementById('loginForm').innerHTML = '<div style="text-align:center"><h3 style="color:var(--success);margin-bottom:1rem">Đã đăng nhập thành công!</h3><a href="dashboard.html" class="btn btn-primary btn-block">Vào Bảng Điều Khiển</a></div>';
             }
+        }).catch(err => {
+            console.error('Lỗi kiểm tra session:', err);
         });
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const btn = document.getElementById('loginBtn');
             const errDiv = document.getElementById('loginError');
@@ -55,18 +57,35 @@
             btn.disabled = true;
             errDiv.style.display = 'none';
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
 
-            if (error) {
-                errDiv.textContent = 'Email hoặc mật khẩu không đúng!';
+                if (error) {
+                    const msg = (error.message || '').toLowerCase();
+                    if (msg.includes('fetch') || error.status === 0 || !navigator.onLine) {
+                        errDiv.innerHTML = '<strong>Lỗi kết nối máy chủ!</strong><br>Không thể kết nối đến Supabase. Dự án Supabase có thể đang bị tạm dừng (Paused) trên supabase.com hoặc bị lỗi mạng.';
+                    } else if (msg.includes('invalid') || msg.includes('credential')) {
+                        errDiv.textContent = 'Email hoặc mật khẩu không chính xác!';
+                    } else if (msg.includes('email not confirmed')) {
+                        errDiv.textContent = 'Email tài khoản chưa được xác thực!';
+                    } else {
+                        errDiv.textContent = error.message || 'Đăng nhập không thành công!';
+                    }
+                    errDiv.style.display = 'block';
+                    btn.innerHTML = 'Đăng nhập';
+                    btn.disabled = false;
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (err) {
+                console.error(err);
+                errDiv.innerHTML = '<strong>Lỗi kết nối!</strong><br>Không thể kết nối đến máy chủ Supabase. Vui lòng kiểm tra lại mạng hoặc trạng thái dự án trên Supabase Dashboard.';
                 errDiv.style.display = 'block';
                 btn.innerHTML = 'Đăng nhập';
                 btn.disabled = false;
-            } else {
-                window.location.href = '/admin/dashboard.html';
             }
         });
     </script>

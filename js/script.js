@@ -378,6 +378,14 @@ function renderPortfolioModal(item) {
     `;
 }
 
+// Helper timeout để tránh request bị treo vô tận khi Supabase tạm dừng / mất mạng
+function fetchWithTimeout(promise, ms = 7000) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Yêu cầu quá thời gian chờ (Timeout)')), ms))
+    ]);
+}
+
 async function loadPortfolio() {
     // Hỗ trợ cả trang chủ (home-portfolio-grid) lẫn trang portfolio đầy đủ
     const grid = document.querySelector('.portfolio-grid');
@@ -397,7 +405,7 @@ async function loadPortfolio() {
 
         if (isHomePage) query = query.limit(limit);
 
-        const { data, error } = await query;
+        const { data, error } = await fetchWithTimeout(query);
 
         if (error) throw error;
 
@@ -427,7 +435,13 @@ async function loadPortfolio() {
 
     } catch (err) {
         console.error('Lỗi tải portfolio:', err);
-        grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);grid-column:1/-1">Không thể tải dự án.</p>';
+        grid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--clr-text-secondary);">
+                <i class="fas fa-database" style="font-size:2rem;color:var(--clr-accent,#FF6B81);margin-bottom:0.8rem;display:block;"></i>
+                <p style="margin-bottom:0.4rem;font-weight:600;">Không thể tải dữ liệu dự án</p>
+                <small style="opacity:0.8;display:block;">Máy chủ Supabase có thể đang tạm dừng (Paused) hoặc mất kết nối.</small>
+            </div>
+        `;
     }
 }
 
@@ -517,11 +531,13 @@ async function loadServices() {
     if (!grid) return;
 
     try {
-        const { data, error } = await supabaseClient
-            .from('services')
-            .select('*')
-            .eq('is_visible', true)
-            .order('display_order', { ascending: true });
+        const { data, error } = await fetchWithTimeout(
+            supabaseClient
+                .from('services')
+                .select('*')
+                .eq('is_visible', true)
+                .order('display_order', { ascending: true })
+        );
 
         if (error) throw error;
         grid.innerHTML = data.map(renderServiceCard).join('');
@@ -538,7 +554,13 @@ async function loadServices() {
 
     } catch (err) {
         console.error('Lỗi tải dịch vụ:', err);
-        grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);grid-column:1/-1">Không thể tải dịch vụ.</p>';
+        grid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--clr-text-secondary);">
+                <i class="fas fa-database" style="font-size:2rem;color:var(--clr-accent,#FF6B81);margin-bottom:0.8rem;display:block;"></i>
+                <p style="margin-bottom:0.4rem;font-weight:600;">Không thể tải dữ liệu dịch vụ</p>
+                <small style="opacity:0.8;display:block;">Máy chủ Supabase có thể đang tạm dừng (Paused) hoặc mất kết nối.</small>
+            </div>
+        `;
     }
 }
 

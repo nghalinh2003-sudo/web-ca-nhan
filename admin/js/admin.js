@@ -34,19 +34,36 @@ if (loginForm) {
         btn.disabled = true;
         errDiv.style.display = 'none';
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
 
-        if (error) {
-            errDiv.textContent = 'Email hoặc mật khẩu không đúng!';
+            if (error) {
+                const msg = (error.message || '').toLowerCase();
+                if (msg.includes('fetch') || error.status === 0 || !navigator.onLine) {
+                    errDiv.innerHTML = '<strong>Lỗi kết nối máy chủ!</strong><br>Không thể kết nối đến Supabase. Dự án Supabase có thể đang bị tạm dừng (Paused) trên supabase.com hoặc mất kết nối mạng.';
+                } else if (msg.includes('invalid') || msg.includes('credential')) {
+                    errDiv.textContent = 'Email hoặc mật khẩu không chính xác!';
+                } else if (msg.includes('email not confirmed')) {
+                    errDiv.textContent = 'Email tài khoản chưa được xác thực!';
+                } else {
+                    errDiv.textContent = error.message || 'Đăng nhập không thành công!';
+                }
+                errDiv.style.display = 'block';
+                btn.innerHTML = 'Đăng nhập';
+                btn.disabled = false;
+            } else {
+                // Đăng nhập thành công, tải lại trang để ẩn form và hiện dashboard
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error(err);
+            errDiv.innerHTML = '<strong>Lỗi kết nối!</strong><br>Không thể kết nối đến máy chủ Supabase. Vui lòng kiểm tra lại trạng thái dự án trên Supabase Dashboard.';
             errDiv.style.display = 'block';
             btn.innerHTML = 'Đăng nhập';
             btn.disabled = false;
-        } else {
-            // Đăng nhập thành công, tải lại trang để ẩn form và hiện dashboard
-            window.location.reload();
         }
     });
 }

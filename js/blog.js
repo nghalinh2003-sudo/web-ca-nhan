@@ -33,6 +33,14 @@ function getQueryParam(name) {
     return urlParams.get(name);
 }
 
+// Helper timeout
+function blogFetchWithTimeout(promise, ms = 7000) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Yêu cầu quá thời gian chờ (Timeout)')), ms))
+    ]);
+}
+
 // === Trang blog.html — Danh sách bài viết ===
 async function loadBlogPosts(page = 1, categorySlug = null, searchQuery = null) {
     const grid = document.getElementById('blogGrid');
@@ -45,30 +53,30 @@ async function loadBlogPosts(page = 1, categorySlug = null, searchQuery = null) 
     currentPage = page;
     currentCategory = categorySlug;
     currentSearch = searchQuery;
-    
-    let selectQuery = '*, categories(name, slug)';
-    if (categorySlug && categorySlug !== 'all') {
-        selectQuery = '*, categories!inner(name, slug)';
-    }
-
-    let query = supabaseClient.from('posts').select(selectQuery, { count: 'exact' })
-        .eq('status', 'published')
-        .order('published_at', { ascending: false });
-
-    if (categorySlug && categorySlug !== 'all') {
-        query = query.eq('categories.slug', categorySlug);
-    }
-    
-    if (searchQuery) {
-        query = query.ilike('title', `%${searchQuery}%`);
-    }
-
-    const start = (page - 1) * POSTS_PER_PAGE;
-    const end = start + POSTS_PER_PAGE - 1;
-    query = query.range(start, end);
 
     try {
-        const { data, count, error } = await query;
+        let selectQuery = '*, categories(name, slug)';
+        if (categorySlug && categorySlug !== 'all') {
+            selectQuery = '*, categories!inner(name, slug)';
+        }
+
+        let query = supabaseClient.from('posts').select(selectQuery, { count: 'exact' })
+            .eq('status', 'published')
+            .order('published_at', { ascending: false });
+
+        if (categorySlug && categorySlug !== 'all') {
+            query = query.eq('categories.slug', categorySlug);
+        }
+        
+        if (searchQuery) {
+            query = query.ilike('title', `%${searchQuery}%`);
+        }
+
+        const start = (page - 1) * POSTS_PER_PAGE;
+        const end = start + POSTS_PER_PAGE - 1;
+        query = query.range(start, end);
+
+        const { data, count, error } = await blogFetchWithTimeout(query);
         if (error) throw error;
         
         if (loading) loading.style.display = 'none';
@@ -97,7 +105,13 @@ async function loadBlogPosts(page = 1, categorySlug = null, searchQuery = null) 
     } catch (err) {
         console.error('Lỗi tải bài viết:', err);
         if (loading) loading.style.display = 'none';
-        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:red;">Đã có lỗi xảy ra khi tải bài viết.</p>';
+        grid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--clr-text-secondary);">
+                <i class="fas fa-newspaper" style="font-size:2rem;color:var(--clr-accent,#FF6B81);margin-bottom:0.8rem;display:block;"></i>
+                <p style="margin-bottom:0.4rem;font-weight:600;">Không thể tải bài viết blog</p>
+                <small style="opacity:0.8;display:block;">Máy chủ Supabase có thể đang tạm dừng (Paused) hoặc mất kết nối.</small>
+            </div>
+        `;
     }
 }
 
@@ -190,12 +204,14 @@ async function loadPost(slug) {
     }
 
     try {
-        const { data, error } = await supabaseClient
-            .from('posts')
-            .select('*, categories(*)')
-            .eq('slug', slug)
-            .eq('status', 'published')
-            .single();
+        const { data, error } = await blogFetchWithTimeout(
+            supabaseClient
+                .from('posts')
+                .select('*, categories(*)')
+                .eq('slug', slug)
+                .eq('status', 'published')
+                .single()
+        );
 
         if (error || !data) throw error || new Error('Not found');
 
